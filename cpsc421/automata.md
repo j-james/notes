@@ -11,7 +11,7 @@ Informally: a computational machine for a decision problem. Takes an input strin
 - Outputs Reject + stops
 - Or runs forever without outputting anything.
 
-Definition (formally): Given a computational machine M, the _language recognized by M_ is $L(M) = \{ x \in \Sigma* : \text{machine M accepts x} \}$.
+Definition: Given a computational machine M, the _language recognized by M_ is $L(M) = \{ x \in \Sigma* : \text{machine M accepts x} \}$.
 
 Let's talk about a different language: $L'(M) = \{ x \in \Sigma* : \text{machine M rejects x} \}$. These are **not** complements: in our model of computation the machine can run forever.
 
@@ -26,10 +26,10 @@ Notation for finite automata:
 - Leading in arrow is the initial state: `-->`
 - Double circle for accepting state: `acc`
 
-Formal definition of a (deterministic) finite automata
+Formal definition of a **(deterministic) finite automata**
 - Definition: A finite automation is a 5-tuple $M = (Q,\Sigma,\delta,q_0,F)$ where
-- $Q$ is the set of states; non-empty and finite
-- $\Sigma$ is our alphabet; non-empty and finite
+- $Q$ is the **set of states**; non-empty and finite
+- $\Sigma$ is our **alphabet**; non-empty and finite
 - $\delta : Q \times \Sigma \rightarrow Q$ is the **transition function**
 - $q_0 \in Q$ is the **start state**
 - $F \subseteq Q$ is the set of **accepting states**
@@ -89,11 +89,11 @@ Example:
 
 Point is, it can get difficult to concatenate arbitrary DFAs (concatenating the DFA examples were done in relatively different ways)
 
-## Non-determinism (and finite automata)
+## Nondeterministic (Finite Automata)
 
-A first informal definition: Giving our computational model the additional power to make "lucky guesses" ...???...
+Informally: Giving our computational model the additional power to make "lucky guesses", i.e. arbitrary choices
 
-Definition: A nondeterministic finite automation is similar to a DFA, except $\delta : Q \times (\Sigma \cup \{\epsilon\} \rightarrow 2^Q$
+Brief definition: An **NFA** is similar to a DFA, except $\delta : Q \times (\Sigma \cup \{\epsilon\}) \rightarrow 2^Q$
 - $2^Q = \{\text{set of all subsets of Q}\}$
 - input 1: a state
 - input 2: a character, or nothing
@@ -102,9 +102,7 @@ Definition: A nondeterministic finite automation is similar to a DFA, except $\d
 Nondeterminism is in the name: notably, this means that
 - you can have multiple arrows with the same label
 - the output is a _set_ of states
-- There can be $\epsilon$s that skip states: these are equivalent to additional (very carefully placed) arrows
-
-
+- There can be $\epsilon$s that skip states: these are equivalent to additional (carefully placed) arrows
 
 NFA Example
 ```automata
@@ -118,10 +116,10 @@ acc s4: 0,1->s4
 - $q_0 = s_1$
 - $F = \{s_4\}$
 
-Formal definition of a (nondeterministic) finite automata
+Formal definition of a **(nondeterministic) finite automata**
 - Definition: A finite automation is a 5-tuple $M = (Q,\Sigma,\delta,q_0,F)$ where
-- $Q$ is the set of states; non-empty and finite
-- $\Sigma$ is our alphabet; non-empty and finite
+- $Q$ is the **set of states**; non-empty and finite
+- $\Sigma$ is our **alphabet**; non-empty and finite
 - $\delta : Q \times (\Sigma \cup \{\epsilon\}) \rightarrow 2^Q$ is the **transition function**
 - $q_0 \in Q$ is the **start state**
 - $F \subseteq Q$ is the set of **accepting states**
@@ -129,28 +127,32 @@ Formal definition of a (nondeterministic) finite automata
 (only thing changed is the transition function)
 
 Recall: What does it mean for a DFA to accept?
-- $M$ accepts $w = w_1, w_2, \ldots, w_n$ if there exists a sequence $r_0, \ldots, r_n \in Q$ for which:
-	- $r_0 = q_0$
-	- $r_i = \delta(r_{i-1}, w_i)$ for all $i = 1..., n$
-	- $r_n \in F$
+
+$M$ accepts $w = w_1, w_2, \ldots, w_n$ if there exists a sequence $r_0, \ldots, r_n \in Q$ for which:
+- $r_0 = q_0$
+- $r_i = \delta(r_{i-1}, w_i)$ for all $i = 1..., n$
+- $r_n \in F$
 
 What does it mean for an NFA to accept?
-The NFA $M$ accepts the string $w$ if there exists a string $y_1,y_2, \ldots, y_m \in (\Sigma \cup \{\epsilon\})*$ and...
 
----missed some stuff
+The NFA $M$ accepts the string $w$ if there exists a string $y_1,y_2, \ldots, y_m \in (\Sigma \cup \{\epsilon\})* \ldots$
+
+(missed some stuff)
 
 ### Some important theorems about finite automata
 
 - Theorems 1.39 and 1.40: The class of all languages recognized by DFAs == the class of all languages recognized by NFAs == regular languages.
-	- This "containment" is trivial, $DFAs \subseteq NFAs$
+	- This "containment" is trivial, $\text{DFAs} \sube \text{NFAs}$
 - Theorems 1.25 and 1.45: If A and B are regular then $A \cup B$ is regular.
+
+## Closure of Regular Languages
 
 ### Closure under union
 $C = (A \cup B) = \{x : x \in A \lor x \in B\}$
 
 Closure under union: When you make the union, have an epsilon transition to A and also to B.
 
-### Concatenation
+### Closure under concatenation
 $A \circ B = \{xy: x \in A \land y \in B \}$
 
 We want to kind of glue them together to get a machine that recognizes their concatenation: so how do we do this?
@@ -162,32 +164,35 @@ For every accepting state of A, add an epsilon to the start state of B, and remo
 Theorem: Let $A,B$ be regular. The following languages are also regular:
 - $A \cup B$
 - $A \circ B = \{a \circ b : a \in A, b \in B\}$
-- $A* = \{x_1 \circ x_2 \circ \hdots \circ x_u : k \geq 0 foreach x_i \in A\}$
-- Complement of A (the set of all strings not in A): $\Sigma* | A$.
+- $A* = \{x_1 \circ x_2 \circ \ldots \circ x_u : k \geq 0 \text{foreach} x_i \in A\}$
+- Complement of A (the set of all strings not in A): $\Sigma* \mid A$.
 
-### Closure under star
-$C = A* = \{x_1x_2x_3 \hdots x_k : k \geq 0 \land x_i \in A$
+### Closure under Kleene star
+$C = A* = \{x_1 x_2 x_3 \ldots x_k : k \geq 0 \land x_i \in A \}$
 
 A* cycles it kinda?
-A is a machine that accepts a string x, A* is a machine that accepts multiple concatenated states x_k
+
+A is a machine that accepts a string x, A* is a machine that accepts multiple concatenated states $x_k$
 
 Remember, epsilons are _really arbitrary_ - the professor is describing them as "lucky guesses".
 
 All you need to do to have a DFA that recognizes the complement is to switch the accepting and the nonaccepting states.
 
-### epsilon-Closures
+### epsilon-closures
 
 - Theorem: Let M be an NFA. Then there is a DFA M' such that L(M') = L(M).
-- Definition: For any set $S \subseteq Q$, the set E(S) is all states reachable from S by following _any number_ (including zero) of arrows labelled by $\epsilon$. Called the $\epsilon$-closure.
-	- Note: $S \subseteq E(S)$
+- Definition: For any set $S \sube Q$, the set E(S) is all states reachable from S by following _any number_ (including zero) of arrows labelled by $\epsilon$. Called the $\epsilon$-closure.
+	- Note: $S \sube E(S)$
 
 Main idea: we can build a DFA that can keep track of the set of all possible states that the NFA could be in.
 
 The states of the DFA should be the subset of all possible states of the NFA.
 
+### Worked example: epsilion-closures
+
 Given NFA $M = (Q, \Sigma, \delta, q_0, F)$, we want to build DFA $M' = (Q', \Sigma ', \delta ', q_0 ', F')$ (with $L(M) = L(M')$.
-- Define $Q= = 2^Q = \{S : S \subseteq Q \}$.
-- Define $F' = \{ S \subseteq Q : S \text{contains an accepting state of} M \} = \{ S \subseteq Q : S \cap F \neq \emptyset \}$
+- Define $Q= = 2^Q = \{S : S \sube Q \}$.
+- Define $F' = \{ S \sube Q : S \text{contains an accepting state of} M \} = \{ S \sube Q : S \cap F \neq \emptyset \}$
 - What is the starting state of the DFA?
 	- $q_0' = E(\{q_0\})$ the set containing $q_0$, or any epsilon arcs of it
 - Lastly, $\delta'(S,a)$
@@ -196,5 +201,5 @@ Given NFA $M = (Q, \Sigma, \delta, q_0, F)$, we want to build DFA $M' = (Q', \Si
 	- Write $E(S) = \{s_0, \ldots, s_k\}$. What states can I get to from $s_i$ after reading a? $\delta(s_i, a)$
 - $\delta'(S,a) = E(\delta(s_1,a) \cup \delta(s_2,a) \cup \ldots \cup \delta(s_k,a)) = E(U_{S \in E(S)} \delta (s,a)$
 - What is $\delta'(S,0)$?
-	- Frm S, upson reading a 0 from the input string... can be in states $\{b, h\}$.
+	- From S, upon reading a 0 from the input string... can be in states $\{b, h\}$.
 	- From $\{b, h\}$, upon following any $\epsilon$-transitions... can be in states $\{b,c,h\}$.
