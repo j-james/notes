@@ -1,7 +1,8 @@
 ---
 layout: default
+title: Complexity Theory
 ---
 
-# Complexity Theory: Do all problems have efficient algorithms?
+Do all problems have efficient algorithms?
 
 nothing here yet...

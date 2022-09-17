@@ -1,8 +1,9 @@
 ---
 layout: default
+title: Automata Theory
 ---
 
-# Automata Theory: How to parse languages?
+How to parse languages?
 
 ## (Deterministic) Finite Automata
 Informally: a computational machine for a decision problem. Takes an input string, and:

@@ -1,7 +1,8 @@
 ---
 layout: default
+title: Computability Theory
 ---
 
-# Computability Theory: Can all software be verified?
+Can all software be verified?
 
 nothing here yet...

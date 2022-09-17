@@ -1,7 +1,8 @@
 ---
 layout: default
+title: Communication Complexity
 ---
 
-# Communication Complexity: How many bits must we send?
+How many bits must we send?
 
 nothing here yet...

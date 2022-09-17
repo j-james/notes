@@ -3,6 +3,8 @@ layout: default
 title: CPSC 421
 ---
 
+Introduction to Theory of Computing
+
 ## Overview of the Course
 Broad categories of lectures:
 - Automata Theory: How to parse languages?
