@@ -49,7 +49,7 @@ Representation: We'll consider everything to be a string.
 To first talk about strings, we need to define an _alphabet_.
 
 - Definition: An **alphabet** is any finite non-empty set.
-	- Usually represented as $\Sigma$, or $\Gamma$. Often $\Sigma = \{0, 1\}$, or $\Sigma = ASCII$, or $\Sigma = Unicode$.
+	- Usually represented as $\Sigma$, or $\Gamma$. Often $\Sigma = \{0, 1\}$, or $\Sigma = \text{ASCII}$, or $\Sigma = \text{Unicode}$.
 - Definition: A **string** is a finite sequence of 0+ characters from the alphabet.
 - Definition: We often will talk about the **empty string**, so we could use a symbol for it: we will call it $\epsilon$.
 - Definition: $\Sigma*$ is the set of all strings with alphabet $\Sigma$.
