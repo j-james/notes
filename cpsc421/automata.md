@@ -2,6 +2,8 @@
 layout: default
 ---
 
+# Automata Theory: How to parse languages?
+
 ## (Deterministic) Finite Automata
 Informally: a computational machine for a decision problem. Takes an input string, and:
 - Outputs Accept + stops
@@ -16,10 +18,10 @@ Here's an example of a finite automata:
 ```finite
 -> q1: 0->q1, 1-> q2
 o: q2: 1->q2, -> q3
-q3: 0,1->q2 
+q3: 0,1->q2
 ```
 
-Notation for finite automata: 
+Notation for finite automata:
 - Leading in arrow is the initial state
 - Double circle for accepting state
 
@@ -40,7 +42,7 @@ Defining $\delta$
 
 What does it mean for a finite automaton to accept a given string?
 - Definition: A finite automation accepts a string $w = w_1 w_2 \ldots w_n$ if there exists a sequence $r_0, \ldots r_n \in Q$ with:
-	- $r_0 = q_0$ 
+	- $r_0 = q_0$
 	- $r_i = \delta(r_{i-1},w_i)$ for $i=1,\ldots,n$
 	- $r_n \in F$
 
@@ -185,7 +187,7 @@ The states of the DFA should be the subset of all possible states of the NFA.
 Given NFA $M = (Q, \Sigma, \delta, q_0, F)$, we want to build DFA $M' = (Q', \Sigma ', \delta ', q_0 ', F')$ (with $L(M) = L(M')$.
 - Define $Q= = 2^Q = \{S : S \subseteq Q \}$.
 - Define $F' = \{ S \subseteq Q : S \text{contains an accepting state of} M \} = \{ S \subseteq Q : S \cap F \neq \emptyset \}$
-- What is the starting state of the DFA? 
+- What is the starting state of the DFA?
 	- $q_0' = E(\{q_0\})$ the set containing $q_0$, or any epsilion arcs of it
 - Lastly, $\delta'(S,a)$
 	- What is the transition function supposed to do? It's supposed to say, if the DFA is in a certain state, what is the next state the DFA should transition to?
@@ -196,4 +198,4 @@ Given NFA $M = (Q, \Sigma, \delta, q_0, F)$, we want to build DFA $M' = (Q', \Si
 	- Frm S, upson reading a 0 from the input string... can be in states $\{b, h\}$.
 	- From $\{b, h\}$, upon following any $\epsilion$-transitions... can be in states $\{b,c,h\}$.
 
-	
+

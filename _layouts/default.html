@@ -1,38 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>{{ page.title }}</title>
-	<meta charset="utf-8"/>
-	<meta name="viewport" content="width=device-width"/>
-	<link rel="icon" type="image/jpg" href="https://j-james.me/assets/compass.jpg"/>
-	<link rel="stylesheet" href="https://j-james.me/css/normalize.css"/>
-	<link rel="stylesheet" href="https://j-james.me/css/style.css"/>
-	<link rel="stylesheet" href="https://j-james.me/writeups/assets/css/style.css"/>
-	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" crossorigin="anonymous"></script>
-	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-		onload='renderMathInElement(document.body, {delimiters: [
-			{left: "$$", right: "$$", display: true},
-			{left: "\\(", right: "\\)", display: false},
-			{left: "\\[", right: "\\]", display: true},
-			{left: "$", right: "$", display: false}
-		]});'>
-	</script>
+  <title>{{ page.title }}</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width"/>
+  <link rel="icon" type="image/jpg" href="https://j-james.me/assets/compass.jpg"/>
+  <link rel="stylesheet" href="https://j-james.me/css/normalize.css"/>
+  <link rel="stylesheet" href="https://j-james.me/css/style.css"/>
+  <link rel="stylesheet" href="https://j-james.me/writeups/assets/css/style.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+    onload='renderMathInElement(document.body, {delimiters: [
+      {left: "$$", right: "$$", display: true},
+      {left: "\\(", right: "\\)", display: false},
+      {left: "\\[", right: "\\]", display: true},
+      {left: "$", right: "$", display: false}
+    ]});'>
+  </script>
 </head>
 <body>
-	<header>
-		<h1>
-			<a href="https://j-james.me">j-james</a>
-		</h1>
-		<nav>
-			<a href="https://j-james.me/about">about</a>
-			<a href="https://j-james.me/resume">resume</a>
-			<a href="https://j-james.me/links">links</a>
-			<a href="https://j-james.me/writeups">writeups</a>
-		</nav>
-	</header>
-	<main>
-		<h1>{{ page.title }}</h1>
-		{{ content }}
-	</main>
+  <header>
+    <h1>
+      <a href="https://j-james.me">j-james</a>
+    </h1>
+    <nav>
+      <a href="https://j-james.me/about">about</a>
+      <a href="https://j-james.me/resume">resume</a>
+      <a href="https://j-james.me/links">links</a>
+      <a href="https://j-james.me/writeups">writeups</a>
+    </nav>
+  </header>
+  <main>
+    <h1>{{ page.title }}</h1>
+    {{ content }}
+  </main>
 </body>
 </html>
