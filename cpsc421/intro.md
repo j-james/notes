@@ -49,7 +49,7 @@ Representation: We'll consider everything to be a string.
 To first talk about strings, we need to define an _alphabet_.
 
 - Definition: An **alphabet** is any finite non-empty set.
-	- Usually represented as $\Sigma$, or $\Gamma$. Often $\Sigma = \{0, 1\}$, or $\Sigma = \text{ASCII}$, or $\Sigma = \text{Unicode}$.
+	- Usually represented as $\Sigma$, or $\Gamma$. Often $\Sigma = \\{0, 1\\}$, or $\Sigma = \text{ASCII}$, or $\Sigma = \text{Unicode}$.
 - Definition: A **string** is a finite sequence of 0+ characters from the alphabet.
 - Definition: We often will talk about the **empty string**, so we could use a symbol for it: we will call it $\epsilon$.
 - Definition: $\Sigma*$ is the set of all strings with alphabet $\Sigma$.
@@ -69,15 +69,15 @@ Important Idea: decision problems are equivalent to languages.
 Example:
 - Let f be a decision problem.
 - Let L = the set of all strings that f maps to Yes.
-- $L = \{ x \in \Sigma* : f(x) = \text{"Yes"} \}$.
-- $T = \{ x \in \Sigma* : f(x) = \text{"No"} \}$.
+- $L = \\{ x \in \Sigma* : f(x) = \text{"Yes"} \\}$.
+- $T = \\{ x \in \Sigma* : f(x) = \text{"No"} \\}$.
 - L and T are complementary sets: no element is in both and every element (of the overarching language) is in one or the other.
 
 Another example:
-- $L = \{ x \in \Sigma* : \text{x is prime} \}$
-- The decision problem is $f(x) = \{ \text{Yes if x is prime; No otherwise} \}$
+- $L = \\{ x \in \Sigma* : \text{x is prime} \\}$
+- The decision problem is $f(x) = \\{ \text{Yes if x is prime; No otherwise} \\}$
 
-Set builder notation: $\{ x \in \Sigma* : f(x) = \text{"Yes"} \}$ reads as for all X in $\Sigma*$ _such that_ $f(x)$ is equal to "Yes"
+Set builder notation: $\\{ x \in \Sigma* : f(x) = \text{"Yes"} \\}$ reads as for all X in $\Sigma* $ _such that_ $f(x)$ is equal to "Yes"
 
 ## Today's Learning Goals (recap? next day?)
 Note: This course and its slides were created for a MWF class, haven't yet been adapted for TT
