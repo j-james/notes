@@ -164,7 +164,7 @@ For every accepting state of A, add an epsilon to the start state of B, and remo
 Theorem: Let $A,B$ be regular. The following languages are also regular:
 - $A \cup B$
 - $A \circ B = \\{a \circ b : a \in A, b \in B\\}$
-- $A* = \\{x_1 \circ x_2 \circ \ldots \circ x_u : k \geq 0 \text{foreach} x_i \in A\\}$
+- $A* = \\{x_1 \circ x_2 \circ \ldots \circ x_u : k \geq 0 \forall x_i \in A\\}$
 - Complement of A (the set of all strings not in A): $\Sigma* \mid A$.
 
 ### Closure under Kleene star
@@ -192,14 +192,14 @@ The states of the DFA should be the subset of all possible states of the NFA.
 
 Given NFA $M = (Q, \Sigma, \delta, q_0, F)$, we want to build DFA $M' = (Q', \Sigma ', \delta ', q_0 ', F')$ (with $L(M) = L(M')$.
 - Define $Q= = 2^Q = \\{S : S \sube Q \\}$.
-- Define $F' = \\{ S \sube Q : S \text{contains an accepting state of} M \\} = \\{ S \sube Q : S \cap F \neq \emptyset \\}$
+- Define $F' = \\{ S \sube Q : \text{S contains an accepting state of M} \\} = \\{ S \sube Q : S \cap F \neq \emptyset \\}$
 - What is the starting state of the DFA?
 	- $q_0' = E(\\{q_0\\})$ the set containing $q_0$, or any epsilon arcs of it
 - Lastly, $\delta'(S,a)$
 	- What is the transition function supposed to do? It's supposed to say, if the DFA is in a certain state, what is the next state the DFA should transition to?
 	- From any state in S, we can follow any number of $\epsilon$-transitions, then any transition labelled by $a$, then any number of $\epsilon$-transitions.
 	- Write $E(S) = \\{s_0, \ldots, s_k\\}$. What states can I get to from $s_i$ after reading a? $\delta(s_i, a)$
-- $\delta'(S,a) = E(\delta(s_1,a) \cup \delta(s_2,a) \cup \ldots \cup \delta(s_k,a)) = E(U_{S \in E(S)} \delta (s,a)$
+- $\delta'(S,a) = E(\delta(s_1,a) \cup \delta(s_2,a) \cup \ldots \cup \delta(s_k,a)) = E(U_{S \in E(S)} \delta (s,a))$
 - What is $\delta'(S,0)$?
 	- From S, upon reading a 0 from the input string... can be in states $\\{b, h\\}$.
 	- From $\\{b, h\\}$, upon following any $\epsilon$-transitions... can be in states $\\{b,c,h\\}$.
