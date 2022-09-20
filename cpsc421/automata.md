@@ -213,9 +213,9 @@ Informally: A **regular expression** is an expression describing a language usin
 - Regex: $\Sigma* 1 \Sigma*$:
 	- Starts with any string of symbols from Sigma, followed by a 1, followed by any set of symbols from Sigma.
 	- $L(r) = \\{ x \in \Sigma^k : \text{x contains a 1} \\}$
-- Regex $0*1*$:
-	- $L(R) = \{0^i1^j : i \geq 0, j \geq 0 \\}$
-- Regex $(0*1*) \cup (1*0*)$
+- Regex $0\* 1\*$:
+	- $L(R) = \\{0^i 1^j : i \geq 0, j \geq 0 \\}$
+- Regex $(0\* 1\*) \cup (1\* 0\*)$
 	- $L(R) = \\{ \text{ones followed by zeros, or vice versa} \\}$
 
 Theorem: A language is **regular** if and only if it is described by a regular expression.
@@ -247,19 +247,19 @@ Regular expressions are great! But there are languages which are not regular.
 ## Random Walks and Cycles
 
 Random walks in two dimensions
-- Property of random walks in 2d: you're very likely to find your way back to the origin at some point
+- You're very likely to find your way back to the origin at some point
 
 Random walks in three dimensions
-- Property of random walks in 3d: you're very _unlikely_ to find your way back to the origin at some point
+- You're very _unlikely_ to find your way back to the origin at some point
 
 Concept: when might we be able to find "cycles" in these walks?
 
-Example: Map of a 4km x 4km block of Rio de Janero.
+Example: Map of a 4km x 4km block of Rio de Janeiro.
 - Suppose I find a "walk" from one corner to the opposite corner that is 100km. Is there an even longer walk?
-- Answer: Yes, as you must have hit a cycle: all the streets in that block add up to less than 100km.
+- Answer: Yes, as you must have hit a cycle: all the streets in that block add up to less than 100km, so you must have hit a street twice.
 
 Main idea: Suppose we have a directed graph with p vertices. If I make a walk of length > p, then this walk **must contain a cycle**.
-- And you can get a longer walk via going around the cycle...
+And you can get a longer walk via going around the cycle...
 
 How is this relevant to finite automata?
 
@@ -290,22 +290,26 @@ Question: Let L be a finite language. Is L regular?
 
 ## The Pumping Lemma
 
-Every regular language $L$ satisfies the Pumping Condition.
+Every regular language $L$ satisfies the **pumping condition**.
 
-**The Pumping Condition** for language $L$:
-- There exists an integer $p>0$ such that, for every string $w \in L$ with $|w| \geq p$, there exist strings $x,y,z \in \Sigma*$ such that
-	- $w = xyz$: w can be composed into xyz
-	- $y \neq \epsilon$: y should not be trivial
-	- $|xy| \leq p$: can assume xy is short
-	- $xy^iz \in L$, for all $i \geq 0$: can **repeat y any number of times** while remaining in L.
+**The Pumping Condition** for regular language $L$:
+There exists an integer $p>0$ such that for every string $w \in L$ with $\mid w \mid \geq p$, there exist strings $x,y,z \in \Sigma*$ such that
+- $w = xyz$: w can be composed into xyz
+- $y \neq \epsilon$: y isn't trivial
+- $\mid xy \mid \leq p$: can assume xy is short
+- $xy^iz \in L$ for all $i \geq 0$: y can **repeat any number of times** while remaining in $L$
+
+The pumping length $p$ is the smallest length that causes a cycle in our finite automation.
 
 ...helpful diagram...
-- Regular languages $\sub$ All languages satisfying the pumping condition
-- Regular languages $\nsub$ All languages not satisfying the pumping condition
-- And there exist languages that satisfy the pumping condition but are not regular.
-- We can use the pumping condition to show that a language _is_ regular, but not _not_ regular (rephrase).
+- Regular languages $\sub$ all languages satisfying the pumping condition
+- Regular languages $\not\sub$ all languages not satisfying the pumping condition
+- There exist languages that satisfy the pumping condition but are not regular.
+- We can _only_ use the pumping condition to show that a language _is not_ regular.
 
-Note that: All languages not satisfying the pumping condition == all languages satisfying the negation of the pumping condition.
+### Negating the pumping lemma
+
+Note that all regular languages satisfy the pumping lemma, but _not all languages that satisfy the pumping lemma are regular_.
 
 Negating the pumping condition is not exactly easy.
 But we can do it 121 style: by pulling the negation through the expression, converting $\sim (\exists : \text{expression})$ to $\forall : \text{expression}$.
@@ -314,6 +318,8 @@ But we can do it 121 style: by pulling the negation through the expression, conv
 - For all integers $p>0$, there exists a string $w \in L$ with $|w| \geq p$ such that
 - for all decompositions $w = xyz$ (i.e. $x,y,z \in \Sigma*$ and $y \neq \epsilon$ and $|xy| \leq p$)
 - there exists $i \geq 0$ such that $x y^i z \notin L$.
+
+In other words: a language $L$ is not regular if there exists a long enough string (conceptually: longer than the sum of the graph's edges) that can produce a string not part of the language when pumped.
 
 <!-- Just for fun, entirely in symbols: $(\forall \p \in \mathbb{Z} : p > 0) : (\exists w \in L : |w| \geq p) : (\forall w = xyz, \exists i \geq 0 : x y^i z \notin L)$ -->
 
