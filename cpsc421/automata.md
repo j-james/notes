@@ -170,7 +170,7 @@ Theorem: Let $A,B$ be regular. The following languages are also regular:
 ### Closure under Kleene star
 $C = A* = \\{x_1 x_2 x_3 \ldots x_k : k \geq 0 \land x_i \in A \\}$
 
-A* cycles it kinda?
+The Kleene star generally represents the set of all strings that can be made with a language.
 
 A is a machine that accepts a string x, A* is a machine that accepts multiple concatenated states $x_k$
 
@@ -203,3 +203,138 @@ Given NFA $M = (Q, \Sigma, \delta, q_0, F)$, we want to build DFA $M' = (Q', \Si
 - What is $\delta'(S,0)$?
 	- From S, upon reading a 0 from the input string... can be in states $\\{b, h\\}$.
 	- From $\\{b, h\\}$, upon following any $\epsilon$-transitions... can be in states $\\{b,c,h\\}$.
+
+## Regular Expressions
+
+Last time: we showed that regular languages are closed under union, concat, star.
+
+Informally: A **regular expression** is an expression describing a language using only union, concat, star: ($\cup, \circ, \star$).
+- Examples: given $\Sigma = \\{0,1\\}$
+- Regex: $\Sigma* 1 \Sigma*$:
+	- Starts with any string of symbols from Sigma, followed by a 1, followed by any set of symbols from Sigma.
+	- $L(r) = \\{ x \in \Sigma^k : \text{x contains a 1} \\}$
+- Regex $0*1*$:
+	- $L(R) = \{0^i1^j : i \geq 0, j \geq 0 \\}$
+- Regex $(0*1*) \cup (1*0*)$
+	- $L(R) = \\{ \text{ones followed by zeros, or vice versa} \\}$
+
+Theorem: A language is **regular** if and only if it is described by a regular expression.
+
+Proof has two directions (via $\iff$):
+1. $\Leftarrow$: Given a regular expression, find an NFA that recognizes the same language
+2. $\Rightarrow$: Given an NFA/DFA, find an equivalent regular expression.
+
+Definition of a regular expression: base cases
+- R is a regular expression if R is
+	- $a$, for some $a \in \Sigma$
+	- $\epsilon$, the empty string
+	- $\emptyset$, the empty set
+
+Definition of a regular expression: recursive cases
+- $R_1 \cup R_2$ (or $R_1 \mid R_2$), where $R_1$ and $R_2$ are regular expressions
+- $R_1 \circ R_2$ (or $(R_1 R_2)$), where $R_1$ and $R_2$ are regular expressions.
+- $(R_1 *)$, where $R_1$ is a regular expression
+
+...examples of the above with graphical finite automata...
+
+Standard regex searches pretty much simulate an NFA, and see if any strings match that NFA.
+
+Example: terrible Twitter regex
+- Regex can be useful, powerful, but also kind of dangerous (i.e. adversarial inputs)
+
+Regular expressions are great! But there are languages which are not regular.
+
+## Random Walks and Cycles
+
+Random walks in two dimensions
+- Property of random walks in 2d: you're very likely to find your way back to the origin at some point
+
+Random walks in three dimensions
+- Property of random walks in 3d: you're very _unlikely_ to find your way back to the origin at some point
+
+Concept: when might we be able to find "cycles" in these walks?
+
+Example: Map of a 4km x 4km block of Rio de Janero.
+- Suppose I find a "walk" from one corner to the opposite corner that is 100km. Is there an even longer walk?
+- Answer: Yes, as you must have hit a cycle: all the streets in that block add up to less than 100km.
+
+Main idea: Suppose we have a directed graph with p vertices. If I make a walk of length > p, then this walk **must contain a cycle**.
+- And you can get a longer walk via going around the cycle...
+
+How is this relevant to finite automata?
+
+```automata
+--> q1: x->q2
+q2: y->q2, z->13
+acc q3
+```
+Input string is XYZ. What can we say about this computation?
+- XYYZ is also accepted by the DFA. And XYYYZ, and so forth.
+
+We want to use this property to help us say when a language is non-regular.
+
+Intuition about non-regular languages:
+- Finite automata have a **finite amount of state**
+- Intuition: A language cannot be regular if it
+	- requires comparing lots of things that are far apart
+	- involves "counting" something
+- Examples:
+	- $A = \\{ xx : x \in \Sigma* \\}$ is not regular
+	- $B = \\{ 0^n 1^n : n \geq 0 \\}$ is not regular
+- Caution: intuition can be wrong!
+	- $D = \\{ w \mid w \text{contains an equal number of occurrences of the substrings 01 and 10} \\}$ is regular
+	- $B = \\{ 1^k y \mid y \in \\{0,1\\}* \text{and y contains at least k 1s, for} k \geq 1 \\}$ is regular
+
+Question: Let L be a finite language. Is L regular?
+- Yes. You _could_ hardcode every possibility into a DFA.
+
+## The Pumping Lemma
+
+Every regular language $L$ satisfies the Pumping Condition.
+
+**The Pumping Condition** for language $L$:
+- There exists an integer $p>0$ such that, for every string $w \in L$ with $|w| \geq p$, there exist strings $x,y,z \in \Sigma*$ such that
+	- $w = xyz$: w can be composed into xyz
+	- $y \neq \epsilon$: y should not be trivial
+	- $|xy| \leq p$: can assume xy is short
+	- $xy^iz \in L$, for all $i \geq 0$: can **repeat y any number of times** while remaining in L.
+
+...helpful diagram...
+- Regular languages $\sub$ All languages satisfying the pumping condition
+- Regular languages $\nsub$ All languages not satisfying the pumping condition
+- And there exist languages that satisfy the pumping condition but are not regular.
+- We can use the pumping condition to show that a language _is_ regular, but not _not_ regular (rephrase).
+
+Note that: All languages not satisfying the pumping condition == all languages satisfying the negation of the pumping condition.
+
+Negating the pumping condition is not exactly easy.
+But we can do it 121 style: by pulling the negation through the expression, converting $\sim (\exists : \text{expression})$ to $\forall : \text{expression}$.
+
+**The Negation of the Pumping Condition**
+- For all integers $p>0$, there exists a string $w \in L$ with $|w| \geq p$ such that
+- for all decompositions $w = xyz$ (i.e. $x,y,z \in \Sigma*$ and $y \neq \epsilon$ and $|xy| \leq p$)
+- there exists $i \geq 0$ such that $x y^i z \notin L$.
+
+<!-- Just for fun, entirely in symbols: $(\forall \p \in \mathbb{Z} : p > 0) : (\exists w \in L : |w| \geq p) : (\forall w = xyz, \exists i \geq 0 : x y^i z \notin L)$ -->
+
+<!-- Pumping Lemma Examples
+- Theorem: $L = \\{ 0^n 1^n : n \geq 0 \\}$ is not regular.
+- Proof:
+	- Let $p \geq 1$ be arbitrary.
+	- Choose $w = 0^{p/2} 1^{p/2}$ (if p is odd, can use ceil(p/2))
+	- $w = 0000000000...011111111111...1$
+	- Consider all **decompositions** of $w = xyz$, with $|y| > 0$ and $|xy| \leq p$.
+- 3 possibilities:
+	- kind of hard to write out, but:
+	- x is only 0s, y only 0s, z 0s and 1s
+	- x 0s and 1s, y only 1s, z only 1s
+	- x only 0s, y 0s and 1s, z only 1s
+- If $i=0$: xz has more 1s than 0s: $\implies xz \notin L$. (number of 0s and 1s not equal)
+- if $i>1$: $xy^iz$ has more 1s than 0s: $\implies $xy^iz \notin L$.
+
+the above section is pretty poorly written
+
+A smarter proof
+- Theorem: $L = \\{ \\}$
+
+-->
