@@ -370,7 +370,7 @@ Formal definition of a **pushdown automation**:
 - $Q$ is our set of **states**; non-empty and finite
 - $\Sigma$ is our **input alphabet**; non-empty and finite
 - $\Gamma$ is our **stack alphabet**; non-empty and finite (this is new!)
-- $\delta: Q \cross (\Sigma \cup \\{\epsilon\\}) \cross (\Gamma \cup \\{\epsilon\\}) \rightarrow 2^{Q \cross (\Gamma \cup \\{\epsilon\\})}$ is the **transition function**
+- $\delta: Q \times (\Sigma \cup \\{\epsilon\\}) \times (\Gamma \cup \\{\epsilon\\}) \rightarrow 2^{Q \times (\Gamma \cup \\{\epsilon\\})}$ is the **transition function**
 	- this is new! and warrants an explanation:
 	- the previous state, the input, and the popped stack element determine the next state
 	- $\Gamma \cup \\{\epsilon\\}$ here is the **popped element of the stack** (remember, we don't _need_ to pop)
@@ -383,7 +383,7 @@ One gotcha: we cannot check the length of the stack! Only push, or pop and read 
 
 - Two alphabets: input alphabet $\Sigma$, stack alphabet $\Gamma$
 - Transition label: input symbol read, stack symbol popped, stack symbol pushed -> next state. $\epsilon$ is represented as e for brevity.
-- $\Sigma = \\{0,1\\}$, $\Gamma = \\{0,\$\\}$ (note no 1 - we don't need it)
+- $\Sigma = \\{0,1\\}$, $\Gamma = \\{0,\\$\\}$ (note no 1 - we don't need it)
 - $Q = \\{q_0,q_1,q_2,q_3\\}$, $F = \\{q_0, q_3\\}$
 ```automata
 -> acc s1: e,e,$->q2
@@ -409,7 +409,7 @@ Definition of a **context-free grammar**:
 - Grammar: $G = (V, \Sigma, R, S)$
 - Variables: $\\{S\\} = V$
 - Terminals: $\\{a, b\\} = \Sigma$
-- "Rules" or Productions $R = V \cross (\Sigma \cup \\{\epsilon\\})\star$:
+- "Rules" or Productions $R = V \times (\Sigma \cup \\{\epsilon\\})\star$:
 	- $S \rightarrow Sa$
 	- $S \rightarrow Sb$
 	- $S \rightarrow \epsilon$
@@ -423,4 +423,4 @@ A context-free grammar **gives us a way to derive strings**.
 
 Suppose $u,v,w$ are strings in $(V \cup \Sigma)\star$, and $A \in V$. If there is a rule $A \rightarrow v$, then we can say $uAw$ **yields** $uvw$: written as $uAw \rightarrow uvw$.
 
-Suppose $u,v,w$ are strings in $(V \cup \Sigma)\star$, and $A \in V$. If there is a sequence $u_1 \implies u_2 \implies \ldots \implies u_k$, then we say $u_1$ **derives** $u_k$: written as $u_1 \implies * u_k$.
+Suppose $u,v,w$ are strings in $(V \cup \Sigma)\star$, and $A \in V$. If there is a sequence $u_1 \implies u_2 \implies \ldots \implies u_k$, then we say $u_1$ **derives** $u_k$: written as $u_1 \implies \star u_k$.
