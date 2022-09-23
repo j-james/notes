@@ -28,9 +28,10 @@ Notation for finite automata:
 
 Formal definition of a **(deterministic) finite automata**
 - Definition: A finite automation is a 5-tuple $M = (Q,\Sigma,\delta,q_0,F)$ where
-- $Q$ is the **set of states**; non-empty and finite
+- $Q$ is the set of **states**; non-empty and finite
 - $\Sigma$ is our **alphabet**; non-empty and finite
 - $\delta : Q \times \Sigma \rightarrow Q$ is the **transition function**
+	- in words: the current state and the input (element of $\Sigma$) determine the next state
 - $q_0 \in Q$ is the **start state**
 - $F \subseteq Q$ is the set of **accepting states**
 
@@ -118,9 +119,10 @@ acc s4: 0,1->s4
 
 Formal definition of a **(nondeterministic) finite automata**
 - Definition: A finite automation is a 5-tuple $M = (Q,\Sigma,\delta,q_0,F)$ where
-- $Q$ is the **set of states**; non-empty and finite
+- $Q$ is the set of **states**; non-empty and finite
 - $\Sigma$ is our **alphabet**; non-empty and finite
 - $\delta : Q \times (\Sigma \cup \\{\epsilon\\}) \rightarrow 2^Q$ is the **transition function**
+	- this looks scary, but is simple: the current state and the input (an element of our alphabet, or the empty string $\epsilon$) determine the next state
 - $q_0 \in Q$ is the **start state**
 - $F \subseteq Q$ is the set of **accepting states**
 
@@ -344,3 +346,81 @@ A smarter proof
 - Theorem: $L = \\{ \\}$
 
 -->
+
+## Pushdown Automatas
+
+Finite automata have some limitations:
+- Can only move left-to-right
+- Our machines have a finite amount of memory
+
+Idea: How do we give ourselves unlimited memory? Using pointers can make things tricky - how large can your pointers be? Instead, we'll use a **stack**.
+
+Definition: A **pushdown automation** (PDA) is what you get by combining an NFA and a single stack.
+
+Why just a single stack?
+- Because an NFA + a simple queue is _equivalent to a Turing machine._
+- Because an NFA + _two_ stacks is also _equivalent to a Turing machine._
+
+Pushdown automata allow us to recognize "context-free languages", which are useful in parsing.
+
+... some examples of pseudocode to recognize an input with just a stack ...
+
+Formal definition of a **pushdown automation**:
+- Definition: A PDA is a 6-tuple $P = (Q, \Sigma, \Gamma, \delta, q_0, F)$ where
+- $Q$ is our set of **states**; non-empty and finite
+- $\Sigma$ is our **input alphabet**; non-empty and finite
+- $\Gamma$ is our **stack alphabet**; non-empty and finite (this is new!)
+- $\delta: Q \cross (\Sigma \cup \\{\epsilon\\}) \cross (\Gamma \cup \\{\epsilon\\}) \rightarrow 2^{Q \cross (\Gamma \cup \\{\epsilon\\})}$ is the **transition function**
+	- this is new! and warrants an explanation:
+	- the previous state, the input, and the popped stack element determine the next state
+	- $\Gamma \cup \\{\epsilon\\}$ here is the **popped element of the stack** (remember, we don't _need_ to pop)
+- $q_0 \in Q$ is the **start state**
+- $F \sube Q$ is the set of **accepting states**
+
+One gotcha: we cannot check the length of the stack! Only push, or pop and read the popped value. So in order to know when we have an empty stack (and therefore in order to count things), we push a symbol `$` not in our alphabet to the stack before everything else.
+
+### PDA diagram
+
+- Two alphabets: input alphabet $\Sigma$, stack alphabet $\Gamma$
+- Transition label: input symbol read, stack symbol popped, stack symbol pushed -> next state. $\epsilon$ is represented as e for brevity.
+- $\Sigma = \\{0,1\\}$, $\Gamma = \\{0,\$\\}$ (note no 1 - we don't need it)
+- $Q = \\{q_0,q_1,q_2,q_3\\}$, $F = \\{q_0, q_3\\}$
+```automata
+-> acc s1: e,e,$->q2
+q2: 0,e,0->q2, 1,0,e->q3
+q3: 1,0,e->q3, e,$,e->q4
+acc q4
+```
+Remember: all not-specified transitions go to the fail state / never resolve
+
+### Example: design a PDA
+
+Design a PDA that recognizes $L = \\{a^i b^j c^k : i=j \lor i=k\\}$ (this was fun).
+
+## Context-Free Grammars
+
+Context-free grammars surprisingly turn out to be helpful for _both_ natural and programming languages.
+
+... context-free grammar example for C ...
+
+... context-free grammar example for natural languages ...
+
+Definition of a **context-free grammar**:
+- Grammar: $G = (V, \Sigma, R, S)$
+- Variables: $\\{S\\} = V$
+- Terminals: $\\{a, b\\} = \Sigma$
+- "Rules" or Productions $R = V \cross (\Sigma \cup \\{\epsilon\\})\star$:
+	- $S \rightarrow Sa$
+	- $S \rightarrow Sb$
+	- $S \rightarrow \epsilon$
+- Start Variable: $S$
+
+Ex. $S \implies Sb \implies Sab \implies \epsilon ab \implies ab$.
+
+A context-free grammar **gives us a way to derive strings**.
+
+### Terminology: yields and derives
+
+Suppose $u,v,w$ are strings in $(V \cup \Sigma)\star$, and $A \in V$. If there is a rule $A \rightarrow v$, then we can say $uAw$ **yields** $uvw$: written as $uAw \rightarrow uvw$.
+
+Suppose $u,v,w$ are strings in $(V \cup \Sigma)\star$, and $A \in V$. If there is a sequence $u_1 \implies u_2 \implies \ldots \implies u_k$, then we say $u_1$ **derives** $u_k$: written as $u_1 \implies * u_k$.
