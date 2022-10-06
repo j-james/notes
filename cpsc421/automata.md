@@ -235,9 +235,9 @@ Definition of a regular expression: base cases
 Definition of a regular expression: recursive cases
 - $R_1 \cup R_2$ (or $R_1 \mid R_2$), where $R_1$ and $R_2$ are regular expressions
 - $R_1 \circ R_2$ (or $(R_1 R_2)$), where $R_1$ and $R_2$ are regular expressions.
-- $(R_1 *)$, where $R_1$ is a regular expression
+- $(R_1 \*)$, where $R_1$ is a regular expression
 
-...examples of the above with graphical finite automata...
+... examples of the above with graphical finite automata ...
 
 Standard regex searches pretty much simulate an NFA, and see if any strings match that NFA.
 
@@ -303,7 +303,7 @@ There exists an integer $p>0$ such that for every string $w \in L$ with $\mid w 
 
 The pumping length $p$ is the smallest length that causes a cycle in our finite automation.
 
-...helpful diagram...
+... helpful diagram ...
 - Regular languages $\sub$ all languages satisfying the pumping condition
 - Regular languages $\not\sub$ all languages not satisfying the pumping condition
 - There exist languages that satisfy the pumping condition but are not regular.
@@ -347,7 +347,7 @@ A smarter proof
 
 -->
 
-## Pushdown Automatas
+## Pushdown Automata
 
 Finite automata have some limitations:
 - Can only move left-to-right
@@ -424,3 +424,69 @@ A context-free grammar **gives us a way to derive strings**.
 Suppose $u,v,w$ are strings in $(V \cup \Sigma)\star$, and $A \in V$. If there is a rule $A \rightarrow v$, then we can say $uAw$ **yields** $uvw$: written as $uAw \rightarrow uvw$.
 
 Suppose $u,v,w$ are strings in $(V \cup \Sigma)\star$, and $A \in V$. If there is a sequence $u_1 \implies u_2 \implies \ldots \implies u_k$, then we say $u_1$ **derives** $u_k$: written as $u_1 \implies \star u_k$.
+
+## Working with Context-Free Languages
+
+Example: Our favorite non-regular language, $L = \\{0^n 1^n : n \geq 0 \\}$
+- Variables: $S$
+- Rules: 
+	- $S \to 0S1$
+	- $S \to \epsilon$
+- Start: 
+	- $S \to \epsilon$
+	- $S \to 0S1 \to 00S11 \to 0011$
+
+Class of Languages | Machine that accepts it | Described by
+-------------------|-------------------------|-------------
+Regular Languages | DFAs, NFAs | Regular Expressions
+Context-Free Languages | (nondeterministic) PDAs | Context-Free Grammars
+
+Every language that can be described by a context-free grammar can be made with a PDA, and vice versa.
+
+## Ambiguous Grammars
+
+Consider this example grammar:
+- Grammar: $G = (V, \Sigma, R, \<EXPR\>)$
+- Variables: $V = \\{\<EXPR\>, \<TERM\>, \<FACTOR\>\\}$
+- Terminals: $\Sigma = \\{+, \times, (, ), 0, 1, \ldots, 9\\}$
+- Rules / Productions:
+	- $\<EXPR\> \to \<EXPR\> + \<TERM\> | \<TERM\>$
+	- $\<TERM\> \to \<TERM\> \times \<FACTOR\> | \<FACTOR\>$
+	- $\<FACTOR\> \to (\<EXPR\>) | 0 | 1 | 2 | \ldots | 9$
+
+Can we simplify this grammar, by reducing variables?
+- $\<EXPR\> \to \<EXPR\> + \<EXPR\> | \<EXPR\> \times \<EXPR\> | (\<EXPR\>) | 0 | 1 | 2 | \ldots | 9$
+Great! But maybe not so great: by doing so, the order of operations is lost, and we can make mistakes. It can generate a string in two different ways. It is **ambiguous**.
+
+Definition: A CFG G is **unambiguous** if...
+- every string in $L(G)$ has a unique parse tree, or...
+- every string in $L(G)$ has a unique leftmost derivation.
+	- Ex. $S \to AB \to aB \to ab$
+	- Not-a-leftmost ex. $S \to AB \to Ab \to ab$
+
+Note that these definitions are essentially equivalent.
+
+### Leftmost and rightmost derivations
+
+The textbook uses leftmost and rightmost derivations to be unambiguous.
+- Definition: A **leftmost derivation** is a derivation that always expands the leftmost operand first.
+- Definition: A **rightmost derivation** is a derivation that always expands the rightmost operand first. (We'll use this less.)
+
+### Parse Trees
+
+We'll use parse trees to be unambiguous. Parse trees are a convenient representation of context-free grammars in action.
+- Suppose you want to compute $1 + 2 \times 2$. 
+- Imagine an inverted "tree" of rule substitutions going up the page. 
+- Note that parenthesis change how the tree is applied.
+
+Aside: CFGs aren't enough to tell us if a programming language compiles, or if a sentence in a natural language is sensible. A grammar can tell you "does this obey basic rules of grammar", not "does this make sense".
+
+## Equivalence of Pushdown Automata and Context-Free Grammars
+
+Theorem: a language is recognized by a PDA if and only if it is described by a context-free grammar. This must be proven in two directions:
+- $\Leftarrow$: $L$ is described by a CFG $\implies L$ is recognized by a PDA.
+- $\Rightarrow$: $L$ is recognized by a PDA $\implies L$ is described by a CFG (harder).
+
+Ideas for a nondetermistic algorithm:
+- Repeatedly guess a variable and rule to apply
+- If we end up with the input string, accept.
