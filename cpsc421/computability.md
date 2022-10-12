@@ -153,3 +153,56 @@ Formal definition of a **multitape Turing machine**:
 
 Theorem: Every multitape Turing machine has an equivalent single-tape Turing machine. We can show this by describing how to simulate a multitape Turing machine on a single-tape Turing machine: simply interleave the tapes, and jump by $k$ characters instead of jumping by 1 character each time.
 
+Takeaway: multitape Turing machines are no more powerful than single-tape Turing machines: but they can be _faster_.
+
+## Nondeterministic Turing Machines
+
+Definition of a **nondeterministic Turing machine**:
+- Same as a regular Turing machine, only the transition function changes: $\delta$ now outputs _sets_ of triples.
+- $\delta : Q \times \Gamma \to 2^{Q \times \Gamma \times \\{L,R\\}}$
+We also need to change the definition of acceptance: if there's any sequence of transitions leading to $q_{accept}$, then it accepts.
+- Formalize this using a configuration tree (as opposed to a sequence).
+- For any node in the tree with configuration C, add children $C'$ for all configurations that could follow from C.
+- Children are all the configurations that a transition function can yield, leaves are accept/reject configs.
+- The NTM accepts its input if any leaf in the tree is an accepting configuration.
+
+What might a tree look like if there's no accepting node in the tree?
+- Could still have reject leafs...
+- Could have some infinite branches...
+
+What does it mean for a nondeterministic Turing machine to be a **decider**?
+- We'll say that it's a decider if for all inputs, **the configuration tree is finite**.
+
+Important asymmetry:
+- to accept input, only a single config leaf must accept.
+- to reject input, **all leaves** must reject.
+- (third case: not a decider)
+
+Theorem (3.16): For every nondeterministic Turing machine $M$ there is a deterministic Turing machine $M'$ with $L(M) = L(M')$, i.e. nondeterministic Turing machines can be simulated by deterministic Turing machines.
+
+In addition, if $M$ is a decider, than we can also assume that $M'$ is a decider.
+
+### Simulating NTMs with DTMs
+
+Main idea: breadth-first search of tree
+- If $M$ accepts: we will encounter an accepting leaf and accept
+- If $M$ rejects: we will encounter all rejecting leaves, finish traversal of tree, and reject
+- If $M$ does not halt on some branch: we will not halt...
+Note that a depth-first search will fail with our infinite tree!
+
+Given $M$ and given $x$, I want $M'$ to simulate $M$ on input $x$.
+
+### Simulating NTM deciders with DTM deciders
+
+... missed some stuff ...
+
+Main takeaway: nondetermistic Turing machines are no more powerful than deterministic Turing machines, deciders or not!
+
+- Recall: definition of the deterministic decider (halts on all inputs)
+- Recall: definition of the nondeterministic decider (tree is finite)
+
+If we have a nondeterministic Turing machine:
+- If the tree is infinite, the simulation will run forever.
+- If the tree is finite, we can tweak the simulator so that it always terminates.
+
+Theorem: For every nondeterministic Turing machine decider, there is an equivalent deterministic Turing machine decider.
