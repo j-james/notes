@@ -206,3 +206,69 @@ If we have a nondeterministic Turing machine:
 - If the tree is finite, we can tweak the simulator so that it always terminates.
 
 Theorem: For every nondeterministic Turing machine decider, there is an equivalent deterministic Turing machine decider.
+
+## Encodings
+
+So far, all of the inputs to our Turing machines have been strings: which aren't terribly interesting.
+
+Idea: but everything's just bits! Take more complicated data structures and convert them to strings (a sequence of bits). Examples of such: JSON, Python pickles, code
+
+For any object, say graph G, we'll put angle brackets around it: `<G>` to mean G converted into a string format. We can serialize a graph, DFA, Turing machine, etc with this approach.
+
+Example: `L = {<G> : G is a converted graph}`
+- Accept: valid encodings of connected graphs
+- Reject: valid encodings of disconnected graphs
+- Reject: invalid encodings
+A Turing machine that recognizes L must detect invalid encodings and reject them.
+
+We can also look at strings that are encodings of Turing machines.
+
+Recall: $HALT_{TM}$ and $A_{TM}$
+- $HALT_{TM} = \\{\<M,w\>: \text{ M is a TM that halts on input w}\\}$
+- $A_{TM} = \\{\<M,w\>: \text{ M is a TM that accepts input w}\\}$
+
+Neither are decidable languages. However: both are recognizable languages.
+
+## Universal Turing Machine
+
+Inputs:
+- Encoding of a Turing machine `<M>`
+- Some string `w`
+Outputs:
+- ACCEPT if and only if `M` accepts `w`
+
+A humorous example, in Python:
+```python
+import sys
+M = sys.argv[1]
+w = sys.argv[2]
+exec(M)
+```
+
+Example: A Turing machine U that recognizes $A_{TM}$
+On input X:
+- If `x = <M,w>` where `M` is a Turing machine and $w \in Sigma\*$:
+	- Simulate `M` on input `w`
+	- If `M` enters accept state: ACCEPT
+	- If `M` enters reject state: REJECT
+- Else, REJECT
+
+Behavior:
+`M` on input `w` | `U` on input `<M,w>`
+---|---
+accepts | accepts
+rejects | rejects
+loops | loops
+
+Conclusion: U accepts `<M,w>` $\iff$ M accepts w. So U recognizes $A_{TM}$.
+
+## Countable vs. Uncountable Sets
+
+Definition: Two sets A and B have the same **cardinality** if there is a bijection (both injective and surjective, one-to-one and onto) $f$ mapping $A$ to $B$.
+
+- Definition: A set is **countably infinite** if it has the same cardinality as the natural numbers.
+- Definition: A set is **countable** if it is finite or countably infinite.
+- Definition: A set is **uncountable** if it is infinite but not countable.
+
+Theorem: Every language $L$ is countable.
+Proof: Every $\Sigma\*$ is countable, so $L$ must be countable.
