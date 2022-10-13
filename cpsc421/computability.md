@@ -273,3 +273,65 @@ Definition: Two sets A and B have the same **cardinality** if there is a bijecti
 
 Theorem: Every language $L$ is countable.
 Proof: Every $\Sigma\*$ is countable, so $L$ must be countable.
+Claim: If we have an injective map $f: A \to \mathbb{N}$ then $A$ is countable.
+Proof: If A is finite, done. If f is surjective, done. Otherwise $image(f) \subset \mathbb{N}$, but we can enumerate $image(f)$ as $\\{b_1,b_2,b_3,\ldots \\}$. Now we have a bijection from $image(f)$ to $\mathbb{N}$.
+- $image(f)$: the set of all outputs of the function $f$
+
+Theorem: The set of all Turing machines is countable.
+Proof: Every Turing machine can be described by a string $\<M\>$. Let $L$ be the language of all encodings of Turing machines. This is a language, hence it is countable.
+
+Theorem: The positive rational numbers $\mathbb{Q} = \\{\frac{m}{n} : m, n \in \mathbb{N}\\}$ are countable.
+Proof: Consider ordering the rational numbers in a grid, and going through them diagonally, while skipping duplicates. That provides an ordering of rational numbers: which can then be described by an injection.
+
+## The Halting Problem
+
+General idea: there are certain statements that will always result in logical contradictions when attempting to answer them.
+
+Recall: $A_{TM} = \\{\<M,w\>\\ : \text{ M is a TM that accepts w}}$
+Last time: we showed that $A_{TM}$ is recognizable.
+This time: we'll try to show that $A_{TM}$ is (not) decidable.
+
+Idea: self-referential sentences $\implies$ contradictions, so do self-referential Turing machines $\implies$ contradictions?
+
+Suppose there exists a Turing machine $H$ that decides $A_{TM}$.
+Consider the Turing machine $\<M\>$: which outputs 0 if $M$ accepts $\<M\>$, and 1 otherwise. Also consider the Turing machine NEG: which outputs 1 if $M$ rejects $\<M\>$ and 0 otherwise.
+
+What happens when we feed NEG to itself as input? Contradiction!
+
+NEG rejects <NEG> $\iff$ NEG accepts <NEG>
+
+Aside: we spent several lectures building up the idea of Turing machines, only to prove that the Halting problem is undecidable in around 10 minutes.
+
+## The Diagonalization Argument
+
+The idea is due to Georg Cantor.
+- So revolutionary that his peers couldn't handle it!
+- Poincaré: "a grave disease"; Kronecker: "a scientific charlatan"
+
+Let $\mathbb{B}$ be the set of all infinite bit-sequences.
+
+Theorem: The set $\mathbb{B}$ is **not countable**.
+Approach: Proof by contradiction. Proof:
+- Assume the set is countable. So there exists a bijection $f : \mathbb{N} \to \mathbb{B}$.
+- List the sequences in $\mathbb{B}$, ordered using the bijection $f$ (0-$n$).
+- This list contains **every** infinite sequence, because $f$ is a bijection.
+- Focus on the diagonal: Let $a_n = n^{th}$ bit of $f(n)$.
+- Flip the bits: Let $b_n$ = the opposite of $a_n$
+- Assemble the flipped bits: Let $x = b_1 b_2 b_3 b_4 \ldots$
+- Observation: $x \neq f(n)$ for any $n$: because $x$ **must** differ from $f(n)$ in the $n^{th}$ digit. Thus $x$ is not on the list.
+- Contradiction: The list should contain every infinite bit sequence.
+- Conclusion: $f$ does not exist, i.e. $\mathbb{B}$ is not countable.
+
+Why is $\mathbb{B}$ uncountable but $\Sigma\*$ is countable?
+- Every element of $\Sigma\*$ is a finite string, while every element of $\mathbb{B}$ is an infinite string.
+
+Corollary: There are uncountably many languages.
+Proof:
+- Can enumerate all strings in $\Sigma\*$
+- Each language $L$ contains some subset of them
+- There is a bijection between languages and infinite bit-sequences
+- So then the set of all languages is uncountably infinite.
+- Conclusion: the class of all languages, $2^{\Sigma\*}$, has the same cardinality as $\mathbb{B}$ (uncountably infinite)
+
+Claim: The set of recognizable languages is countable.
+Proof: For every recognizable language L, there is a Turing machine that recognizes it: so there is an injection from recognizable languaes to $L^{TM}$.
