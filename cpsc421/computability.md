@@ -37,7 +37,7 @@ As it turns out: any Turing machine can be "simulated" using a Wang tiling.
 
 After some time: The smallest set of Wang tiles that are Turing-complete are 11 tiles with 4 colors.
 
-![11 Wang tiles](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Wang_11_tiles.svg/1024px-Wang_11_tiles.svg.png)
+![11 Wang tiles](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Wang_11_tiles.svg/316px-Wang_11_tiles.svg.png)
 
 ## Turing Machines
 
@@ -60,7 +60,7 @@ What are Turing Machines, anyway? They require:
 Formal definition of a **Turing machine**
 - Definition: A Turing machine is a 7-tuple $T = (Q,\Sigma,\Gamma,\delta,q_0,q_{accept},q_{reject})$ where
 - $Q$ is the set of **states**; non-empty and finite
-- $\Sigma$ is our **alphabet**; non-empty and finite (without the blank string, $_ \notin \Sigma$)
+- $\Sigma$ is our **alphabet**; non-empty and finite (without the blank string, $\\_ \notin \Sigma$)
 - $\Gamma$ is our **tape alphabet**; non-empty and finite
 - $\delta : Q \times \Gamma \rightarrow Q \times \Gamma \times \\{L,R\\}$ is the **transition function**
 - $q_0 \in Q$ is the **start state**
@@ -116,7 +116,7 @@ Definition: The **configuration of a Turing machine** is a string $aqb$ where $a
 - The Turing machine is in state $q$
 - The tape content is $ab$ (ignore blanks at end)
 - The head is on the first symbol of $b$
-- Initial configuration: $q_0 x_{input string}$
+- Initial configuration: $q_0 x_{input\ string}$
 - Accepting configuration: $a q_{accept} b$ for any $a,b \in \Gamma\*$
 - Rejecting configuration: $a q_{reject} b$ for any $a,b \in \Gamma\*$
 
@@ -213,9 +213,9 @@ So far, all of the inputs to our Turing machines have been strings: which aren't
 
 Idea: but everything's just bits! Take more complicated data structures and convert them to strings (a sequence of bits). Examples of such: JSON, Python pickles, code
 
-For any object, say graph G, we'll put angle brackets around it: `<G>` to mean G converted into a string format. We can serialize a graph, DFA, Turing machine, etc with this approach.
+For any object, say graph G, we'll put angle brackets around it: $\<G\>$ to mean G converted into a string format. We can serialize a graph, DFA, Turing machine, etc with this approach.
 
-Example: `L = {<G> : G is a converted graph}`
+Example: $L = \\{\<G\> : G is a converted graph\\}$
 - Accept: valid encodings of connected graphs
 - Reject: valid encodings of disconnected graphs
 - Reject: invalid encodings
@@ -232,10 +232,10 @@ Neither are decidable languages. However: both are recognizable languages.
 ## Universal Turing Machine
 
 Inputs:
-- Encoding of a Turing machine `<M>`
-- Some string `w`
+- Encoding of a Turing machine $\<M\>$
+- Some string $w$
 Outputs:
-- ACCEPT if and only if `M` accepts `w`
+- ACCEPT if and only if $M$ accepts $w$
 
 A humorous example, in Python:
 ```python
@@ -247,24 +247,25 @@ exec(M)
 
 Example: A Turing machine U that recognizes $A_{TM}$
 On input X:
-- If `x = <M,w>` where `M` is a Turing machine and $w \in Sigma\*$:
-	- Simulate `M` on input `w`
-	- If `M` enters accept state: ACCEPT
-	- If `M` enters reject state: REJECT
+- If $x = \<M,w\>$ where $M$ is a Turing machine and $w \in Sigma\*$:
+	- Simulate $M$ on input $w$
+	- If $M$ enters accept state: ACCEPT
+	- If $M$ enters reject state: REJECT
 - Else, REJECT
 
 Behavior:
-`M` on input `w` | `U` on input `<M,w>`
----|---
-accepts | accepts
-rejects | rejects
-loops | loops
 
-Conclusion: U accepts `<M,w>` $\iff$ M accepts w. So U recognizes $A_{TM}$.
+$M$ on input $w$ | $U$ on input $\<M,w\>$
+-----------------|-----------------------
+accepts          | accepts
+rejects          | rejects
+loops            | loops
+
+Conclusion: U accepts $\<M,w\>$ $\iff$ M accepts w. So U recognizes $A_{TM}$.
 
 ## Countable vs. Uncountable Sets
 
-Definition: Two sets A and B have the same **cardinality** if there is a bijection (both injective and surjective, one-to-one and onto) $f$ mapping $A$ to $B$.
+Definition: Two sets A and B have the same **cardinality** if there is a bijection (both injective and surjective, one-to-one and onto) $f$ mapping $A$ to $B$ (or $B$ to $A$).
 
 - Definition: A set is **countably infinite** if it has the same cardinality as the natural numbers.
 - Definition: A set is **countable** if it is finite or countably infinite.
