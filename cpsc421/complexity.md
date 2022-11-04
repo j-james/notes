@@ -186,26 +186,33 @@ There are several open questions surrounding P, NP, and EXP:
 
 The answer to **either Q1 or Q2** is yes. Proof: $P \sube NP \sube EXP$, yet by the time hierarchy theorem $P \neq EXP$. So either $P \neq NP$ or $NP \neq EXP$ (or both).
 
-Theorem: The following are equivalent:
-- There exists a nondeterministic, polytime TM M that decides L.
-- There exists a deterministic, polytime TM V and a constant c s.t.
-	- $L = \\{x \in \Sigma\* : \exists y \in \Sigma\* \text{ s.t. } \|y\| \leq \|x\|^c \land V \text{ accepts } (x,y)\\}$
-- x: "input", y: "certificate", V: "verifier"
-- i.e. for the three color graph, give us a colored graph and we can verify it
+## Certificates and verifiers
 
-Claim: $3COLOR \in NP$.
+Theorem: NP has two main, equivalent definitions:
+- There exists a **nondeterministic**, polytime TM M that decides L.
+- There exists a **deterministic**, polytime TM V and a constant c s.t.
+	- $L = \\{x \in \Sigma\* : \exists y \in \Sigma\* \text{ s.t. } \|y\| \leq \|x\|^c \land V \text{ accepts } (x,y)\\}$
+	- x: "input", y: "certificate", V: "verifier"
+	- i.e. for the three color graph, give us a colored graph and we can verify it
+
+Main idea: the certificate y serves as V's substitute for nondeterminism.
+
+### Example: 3COLORMAP
+
+Claim: $3COLORMAP \in NP$.
 - $\\{\<G\> : \text{ G is 3-colorable}\\}$
 - Must find a deterministic polytime TM V s.t. $3COLOR = \\{x: \exists y, \|y\| \leq \|x\|^c, V \text{ accepts } (x,y)\\}$
 - Code for $V$: on input (x,y)
-- If $x$ not of form $\<G\>$, where $G=(V,E)$ is a graph, reject
-- From $y$, extract values $color[v] \in \\{1,2,3\\}$ for each $v \in V$
-- For every edge $\\{u,v\\} \in E$: If $color[u] = color[v]$, reject
-- Otherwise accept
+	- If $x$ not of form $\<G\>$, where $G=(V,E)$ is a graph, reject
+	- From $y$, extract values $color[v] \in \\{1,2,3\\}$ for each $v \in V$
+	- For every edge $\\{u,v\\} \in E$: If $color[u] = color[v]$, reject
+	- Otherwise accept
 - $y$ does exist, it's simply a valid coloring of the graph
 
 To show correctness of V, we need three things:
 
-1: If $x = \<G\>$ and G is 3-colorable: need $\exists y \text{ s.t. } \|y\| \leq \|x\|^c$ and $\text{V accepts (x,y)}$. It does exist, y can be a valid 3 coloring of G. Note: $\|y\| = O(n)$ and $\|x\| = \Omega(n)$
+1: If $x = \<G\>$ and G is 3-colorable: need $\exists y \text{ s.t. } \|y\| \leq \|x\|^c$ and $\text{V accepts (x,y)}$.
+- It does exist, y can be a valid 3 coloring of G. Note: $\|y\| = O(n)$ and $\|x\| = \Omega(n)$
 
 2: If $x \neq \<G\>$ where G is 3-colorable: then no certificate y should make V erroreously accept.
 - If x not of form $\<G\>$: v definitely rejects.
@@ -214,4 +221,168 @@ To show correctness of V, we need three things:
 3: Must check that V runs in time polynomial in |xy|.
 - Decoding takes polytime, checking neighbors takes polytime.
 
+<details markdown="block">
+<summary markdown="span">Proofs of NP definition</summary>
 
+Proof: $(2) \implies (1)$
+- Given verifier V, must construct a NTM M deciding L
+- Inputs to the verifier are x and y, with $\|y\| \leq \|x\|^c$
+	- x: input string
+	- y: certificate (like a proof that x is in the language)
+- Code for M: 
+	- On input x, nondeterministically pick $y \in \Sigma\*$ with $\|y\| \leq \|x\|^c$
+	- Run V on input (x,y)
+	- Accept if V accepts. Reject if V rejects.
+i.e. Suppose $x \in L \implies \exists y$ s.t. V accepts (x,y) $\implies$ there is a leaf where M accepts.
+If $x \notin L \implies \notexists y$ s.t. V accepts (x,y) $\implies \notexists$ leaf, so M does not accept x.
+
+Proof: $(1) \implies (2)$
+- Given an NTM M, you can convert that into a verifier $V$ for $L$.
+- Input to $M$ is $x$, runtime is at most $\|x\|^c$
+- **Idea**: $V$ simulates the tree, but _only_ on a single branch of configuration tree. $y$ specifies which branch. nondeterminism comes into play by letting us pick the correct branch.
+	- our nondetermism lets us pick the correct branch: then the $c$ term is the depth of the path, which is at most polynomial
+- Code for M:
+	- Simulate M deterministically on input x, using y as the sequence of nondeterministic decisions
+	- Accept if M accepts. Reject if M rejects.
+
+</details>
+
+## Why NP is nice
+
+We'll spend the next couple of lectures talking about NP. Why? Nondeterministic Turing machines are ridiculously impractical!
+
+Many problems that we're interested in have the form $L = \\{ x : \exists y, |y| \leq |x|^c, V \text{ accepts } (x,y) \\}$
+- x: problem input
+- y: object we are seeking
+- efficient test: is y a valid solution?
+
+We showed $3COLOR \in NP$.
+- Claim: $CLIQUE \in NP$ ($CLIQUE = \\{\<G,K\> : \text{ G contians a clique of size k }\\}$)
+	- (a clique is a subgraph that has all possible edges)
+- Claim: $HAMPATH \in NP$ (Hamiltonian path problem)
+
+NP has lots of problems that are interesting and nice to solve, but that we don't know of any polynomial time solution. But: if _any_ of these problems are in P, then _all_ of them are in P. NP-completeness!
+
+## The SAT and 3SAT problems
+
+The canonical problem in NP (like how $A_{TM}$ was our canonical undecidable problem)
+
+$SAT = \\{\<\phi\> : \phi \text{ is a Boolean formula for which there exists a satisfying truth assignment} \\}$
+- e.g. $\phi(x_1, x_2, x_3, x_4, x_5) = (((x_1 \lor x_2) \land (x_1 \lor \lnot x_3 \lor x_4)) \lor \lnot (x_2 \land x_3) \lor x_4) \land \lnot x_5$
+	- helpful to visualize with a tree diagram
+
+A satisying truth assignment is an assignment of TRUE/FALSE to each variable so that the whole formula is TRUE.
+
+Definition: A problem is in **conjunctive normal form** if it is a product of sums: i.e. an AND of ORs.
+
+$3SAT = \\{\<\phi\>: \phi \text{ is a Boolean formula in CNF with 3 literals per clause for which there exists a satisfying truth assignment}\\}$
+- e.g. $(x_1 \lor \lnot x_2 \lor x_3) \land (x_5 \lor x_4 \lor \lnot x_2) \land (\lnot x_4 \lor x_1 \lor x_3) \land (\lnot x_3 \lor x_2 \land \lnot x_1)$
+
+## Polytime Reduction
+
+Definition: For some function $f : \Sigma\* \to \Sigma\*$, it is **polytime computable** if there exists a Turing machine that when given $x$ as input terminates with $f(x)$ on the tape and runs in time $poly(\|x\|)$.
+
+Definition: Let $A, B \sube \Sigma\*$ (Let A and B be languages). $f$ is a **polytime reduction** from $A$ to $B$ if:
+- $f$ is a polytime computable function
+- $x \in A \implies f(x) \in B$ ($f(A) \sube B$)
+- $x \notin A \implies f(x) \notin B$ ($f(A^{\_} \sube B^{\_}$)
+We then may say $A \leq_P B$.
+
+<!-- ...helpful image... -->
+
+### Example
+
+Suppose $A = \\{0^n 1 0^n : n \geq 0\\}$, and $B = \\{\1^n 0 1^n : n \geq 0\\}$. Claim: $A \leq_P B$
+
+What does this mean? It means there exists some function that can take a string, map it, and manipulate it so that if $x \in A$, then $x \in B$, and same for converses.
+- Proof: Let $f$ be the function that flips bits of its input. Then, done.
+- $x \in A \implies f(x) \in B$
+- $x \notin A \implies f(x) \notin B$
+- $f(x) \in B \implies x \in A$
+- $x \in A \iff f(x) \in B$
+- Note: these **do not need to be bijections!** A reduction that simply sends all satisfiable inputs to 0 is fine.
+
+### Facets of reductions
+
+Reductions are helpful!
+- Method: find a way to map:
+	- yes-instances of $P_1$ to yes-instances of $P_2$
+	- no-instances of $P_1$ to no-instances of $P_2$
+- Notation: $P_1 \leq_P P_2$
+- Logic: if $P_2$ is easy, $P_1$ is easy
+- Contrapositive: if $P_1$ is hard, $P_2$ is hard
+
+Theorem: If $A \leq_P B$ and $B \in P$, then $A \in P$.
+- There is a polytime Turing machine N that decides B. 
+- There is a polytime reduction f from A to B. 
+- Proof: We want a Turing machine M that decides A in polynomial time.
+	- On input x: compute z = f(x) and then simulate N on input z. Accept iff N accepts.
+	- If $x \in A \implies f(x) \in B \implies \text{ N accepts}$.
+	- If $x \in A^_ \implies f(x) \notin B \implies \text{ N rejects}$.
+
+Question: if we know A reduces to B and B is in NP, is A in NP?
+Answer: Yes, P is a subset of NP. Mind the direction!
+
+When we talked about Turing machines, we had a notion of what it meant to be hard: undecidability. But now we're talking about NP. So which problems in NP are hard?
+
+Maybe $P=NP$, and so all problems in NP are easy.
+
+## NP-Hardness
+
+Definition: A language L is **NP-hard** if it is _at least as hard_ as every problem in NP, i.e. $A \leq_P L, \forall A \in NP$.
+- There's nothing in this definition that's really specific for NP. We could switch it out for other complexity classes if we'd like.
+- Note: we don't require our language to be in NP! $A_{TM}$ is NP-hard.
+
+Definition: A language L is **NP-complete** if L is NP-hard and $L \in NP$.
+
+Definition: The **Cook-Levin Theorem** says that SAT is NP-complete. Corollary: 3SAT is also NP-complete.
+
+Theorem: If B is NP-complete, $C \in NP$, and $B \leq_P C$, then $C$ is NP-complete.
+- Need to show: $A \leq_P C, \forall A \in NP$
+- We know $A \leq_P B$, i.e. you can solve A in terms of B.
+	- So $\exists$ a polytime computable $f : x \in A \iff f(x) \in B$.
+- We know $B \leq_P C$: $\exists$ a polytime computable $g : y \in B \iff g(y) \in C$
+- Let $h : \Sigma\* \to \Sigma\*$ be $h(x) = g(f(x))$. This is polytime computable.
+	- Has the properties: $x \in A \iff f(x) \in B \iff g(f(x) \in C$.
+
+When designing a reduction: if you want to show that your reduction is correct: you need to show that
+- f is polytime computable
+- $x \in A \implies f(x) \in B$
+- $f(x) \in B \implies x \in A$ (the converse)
+- or, $x \notin A \implies f(x) \notin B$ (the inverse)
+
+In a reduction, it's more typical to show $x \in A \implies f(x) \in B$ (often straightforward).
+- Often want to "decode" $f(x) \in B$ to obtain $x \in A$.
+
+### Example: CLIQUE problem
+
+![Simple Clique](../assets/simple-clique.png)
+
+Given $G=(V,E)$ and $k$, does there exist $U \sube V$ with $|U| \geq k$ such that $\\{u,v\\} \in E$ for all distinct vertices $u,v \in U$?
+
+$CLIQUE = \\{\<G,K\> : \text{ G has a clique of size k}\\}$
+- No specification on size: in our example above, there are cliques of size 0 through 3
+
+Theorem: CLIQUE is NP-complete: i.e. CLIQUE is NP-hard, and CLIQUE is in NP.
+- CLIQUE is in NP: because there exists a verifier that can check a possible clique in polytime.
+- CLIQUE is NP-hard: because 3SAT (known NP-hard problem) reduces to CLIQUE. How can we do that?
+
+Reduction $3SAT \leq_P CLIQUE$
+- $x \in 3SAT$ maps to $f(x) \in CLIQUE$
+	- If $x=\<\phi\>$ where $\phi$ is a satisfiable 3CNF formula, then $f(x) = \<G,k\>$ where $G$ has a clique of size $k$.
+- $x \notin 3SAT$ maps to $f(x) \notin CLIQUE$
+	- If $x=\<\phi\>$ where $\phi$ has no satisfiable assignments, then $f(x) = \<G,k\>$ where $G$ has no clique of size $k$.
+	- junk can map to junk
+
+![Complex Clique](../assets/complex-clique.png)
+
+We can show $3SAT$ can be solved by finding a clique of size $k$.
+- Connect every vertex in a block to every other vertex that is **not** its inverse.
+- Then, every clique of size $k$ is a **possible satisfiable assignment**.
+- We can't have $x_i$ and $x_i^{\_}$ both being true: which is represented by no connecting edges.
+
+We still need to "decode" $f(x) \in B$ to $x \in A$... i.e. $f(x) \in CLIQUE \implies x \in 3SAT$.
+- Let $U$ be a clique of size $k$. We must divy it up so that there is exactly one vertex in each group.
+- Given a $f(x) \in \text{ CLIQUE}$ constructed from a 3SAT problem, then we find a satisfying $x \in \text{ 3SAT}$.
+
+Aside: suppose we want to ensure there is a clique of at least size $k-1$. We can make a separate, disconnected clique of $k-1$ vertices. What's this useful for? Don't know yet...
