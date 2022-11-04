@@ -78,7 +78,7 @@ Key difference between Turing machines and our previous models of computation: T
 - A language is **recognizable** if some Turing machine recognizes it.
 - A language is **decidable** if some Turing machine decides it.
 
-![Venn diagram](https://i.stack.imgur.com/CJc44.png)
+![Venn diagram](../assets/language-hierarchy.png)
 - Regular Languages $\sube$ Context-Free Languages
 - Context-Free Languages $\sube$ Decidable Languages
 - Decidable Languages $\sube$ Recognizable Languages

@@ -63,7 +63,7 @@ Aside: reduction can go both ways! $A_{TM}$ reduces to $HALT_{TM}$, and vice ver
 
 What is the difference between this theory of computation and Turing machines, vs. complexity?
 
-Computability theory studies whether problems have **any** algorithmic solution whatsoever. 
+Computability theory studies whether problems have **any** algorithmic solution whatsoever.
 
 Complexity theory studies whether problems have **efficient** algorithmic solutions.
 - How much time is required?
@@ -76,7 +76,7 @@ Usually theorists do "worst case analysis", i.e. as a function of the input leng
 
 The idea here is that it's helpful to analyze the worst case, as every input will then result in equal or better time.
 
-Definition: The **runtime** of a Turing machine $M$ is $f : \mathbb{N} \to \mathbb{N}$: $f(n) = max(x \in \Sigma\*, |x|=n)$. (the number of steps of $M$ on input $x$ until it halts) (assume $M$ is a decider for simplicity)
+Definition: The **runtime** of a Turing machine $M$ is $f : \mathbb{N} \to \mathbb{N}$: $f(n) = max(x \in \Sigma\*, \|x\|=n)$. (the number of steps of $M$ on input $x$ until it halts) (assume $M$ is a decider for simplicity)
 
 Definition: a **class** is a set of languages (or computational problems)
 
@@ -84,7 +84,7 @@ Definition: a **complexity class** is a class defined by Turing machine resource
 
 Definition: **TIME(t(n))** is the class of all languages $L$ such that there exists a Turing machine with runtime $O(t(n))$ that decides $L$.
 
-Recall: different machine models have different efficiencies: our multi-tape Turing machines were broadly more efficient than our single-tape Turing machines. For example: 
+Recall: different machine models have different efficiencies: our multi-tape Turing machines were broadly more efficient than our single-tape Turing machines. For example:
 - $PAL = \\{ww^R : w \in \Sigma\*\\}$
 - Decided by a single-tape Turing machine in $O(n^2)$ time
 - Decided by a multi-tape Turing machine in $O(n)$ time
@@ -152,7 +152,7 @@ NP is very important! Contains a large amount of natural problems
 - Ex. Hamilton path, 3 color graph, graph isomorphism, satisfiable boolean formulas
 - Many problems in NP have "identical complexity", i.e. are complete (we'll talk about this later)
 
-Definition: the **runtime** of NTM on input X is the max-length of any root-leaf path 
+Definition: the **runtime** of NTM on input X is the max-length of any root-leaf path
 - For deciders - no infinite paths!
 
 Recall: $TIME(t(n)) = \\{\text{language L} : \exists \text{ TM M that decides L in time O(t(n))}\\}$
@@ -181,7 +181,7 @@ Claim: $NP \sube EXP$.
 Idea: For any $L \in NP$, there is an NTM deciding $L$ in polynomial time. We can simulate it with a DTM that does the breadth-first search on the configuration tree. The tree has a number of nodes _exponential_ in runtime of the NTM.
 
 There are several open questions surrounding P, NP, and EXP:
-1. Is $P \neq NP$, i.e. $P \subset NP$? 
+1. Is $P \neq NP$, i.e. $P \subset NP$?
 2. Is $NP \neq EXP$, i.e. $NP \subset EXP$?
 
 The answer to **either Q1 or Q2** is yes. Proof: $P \sube NP \sube EXP$, yet by the time hierarchy theorem $P \neq EXP$. So either $P \neq NP$ or $NP \neq EXP$ (or both).
@@ -229,7 +229,7 @@ Proof: $(2) \implies (1)$
 - Inputs to the verifier are x and y, with $\|y\| \leq \|x\|^c$
 	- x: input string
 	- y: certificate (like a proof that x is in the language)
-- Code for M: 
+- Code for M:
 	- On input x, nondeterministically pick $y \in \Sigma\*$ with $\|y\| \leq \|x\|^c$
 	- Run V on input (x,y)
 	- Accept if V accepts. Reject if V rejects.
@@ -313,8 +313,8 @@ Reductions are helpful!
 - Contrapositive: if $P_1$ is hard, $P_2$ is hard
 
 Theorem: If $A \leq_P B$ and $B \in P$, then $A \in P$.
-- There is a polytime Turing machine N that decides B. 
-- There is a polytime reduction f from A to B. 
+- There is a polytime Turing machine N that decides B.
+- There is a polytime reduction f from A to B.
 - Proof: We want a Turing machine M that decides A in polynomial time.
 	- On input x: compute z = f(x) and then simulate N on input z. Accept iff N accepts.
 	- If $x \in A \implies f(x) \in B \implies \text{ N accepts}$.
