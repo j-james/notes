@@ -7,46 +7,37 @@ Do all problems have efficient algorithms?
 
 ## Elephant Jokes
 
-How do you shoot a blue elephant?
-- With a blue elephant gun.
-How do you shoot a red elephant?
-- Hold its trunk shut until it turns blue, then shoot it with a blue elephant gun.
-How do you shoot a purple elephant?
-- Paint it red, hold its trunk shut until it turns blue, then shoot it with a blue elephant gun.
+- How do you shoot a blue elephant?
+	- With a blue elephant gun.
+- How do you shoot a red elephant?
+	- Hold its trunk shut until it turns blue, then shoot it with a blue elephant gun.
+- How do you shoot a purple elephant?
+	- Paint it red, hold its trunk shut until it turns blue, then shoot it with a blue elephant gun.
 
-## Reductions in Computer Science
+## Reductions
 
-Problem 1: Shoot a red elephant.
-Problem 2: Shoot a blue elephant.
+Say we have two problems:
+- Problem 1: Shoot a red elephant.
+- Problem 2: Shoot a blue elephant.
 
-Goal: solve problem 1
-Know: solution for problem 2
+We can say that $P_1$ **reduces to** $P_2$ if we can design an algorithm for solving $P_1$ that uses $P_2$.
+- $P_1 \leq_T P_2$
+- $P_1$ reduces to $P_2$
+- $P_1$ can be solved in terms of $P_2$
+- $P_1$ can be solved using $P_2$ as a subroutine
+- IMPORTANT: Note the order! This is easy to flip-flop!
 
-Method: reduce problem 1 to problem 2
-- i.e. design an algorithm for problem 1 that uses an algorithm for problem 2 as a subroutine
-Conclusion: can solve problem 1
-Logic: if problem 2 is easy => problem 1 is easy
-Informal: problem 1 is **no harder than** problem 2
+Given our original problems: this means that the problem of shooting a red elephant can be solved by shooting a blue elephant.
 
-linearize everything, lol
+What else does this tell us?
+- If $P_2$ is easy, then $P_1$ is easy
+- If $P_1$ is hard, then $P_2$ is hard (we'll use this idea a lot)
+- $P_1$ is **no harder than** $P_2$
+- $P_2$ is **at least as hard as** $P_1$
 
-Notation: Problem 1 $\leq_T$ Problem 2
-- pronounced: "reduces to" or "can be solved using"
-So $P_1 \leq_T P_2$ means:
-- P_1 can be solved using P_2
-- eg. shooting a red elephant can be solved by shooting a blue elephant
-
-$L_1 \leq_T L_2$ means:
-- deciding $L_1$ is **no harder than** deciding $L_2$
-- or, deciding $L_2$ is **at least as hard as** deciding $L_1$.
-
-### Reductions as a tool for showing hardness
-
-Consider the contrapositive of our notation: $P_1 \text{ is hard} \implies P_2 \text{ is hard}$
-
-We'll use the following idea a lot: if $P_1$ is known to be hard, and we show that $P_1 \leq_T P_2$, then $P_2$ is also hard.
-
-Key point: In order to show that $P_2$ is hard, we solve $P_1$ using $P_2$ as a subroutine.
+We can similarly talk about languages this way. $L_1 \leq_T L_2$ means:
+- deciding $L_1$ is **no harder than** deciding $L_2$, or
+- deciding $L_2$ is **at least as hard as** deciding $L_1$.
 
 ### Example: Showing the Halting problem to be undecidable
 
@@ -54,195 +45,173 @@ Last time: $A_{TM}$ is undecidable.
 - $A_{TM} = \\{\<M,w\> : M \text{ accepts w}\\}$
 - $HALT_{TM} = \\{\<M,w\> : M \text{ halts on input w}\\}$
 
-Recall: $HALT_{TM}$ is recognizable: you can create a Turing machine that takes an $\<M,w\>$ and simulated it: if it halts our original Turing machine accepts
+Recall: $HALT_{TM}$ is recognizable
+- You can create a Turing machine $U$ that takes an $\<M,w\>$ and simulate it: if $U$ halts, our original Turing machine $M$ accepts
 
-We want to show that $A_{TM} \leq_T HALT_{TM}$. Proof by contradiction: Suppose there is a Turing machine $R$ that decides $HALT_{TM}$ (it doesn't exist).
+We want to show that $A_{TM} \leq_T HALT_{TM}$. Proof by contradiction:
+- Suppose there is a Turing machine $R$ that decides $HALT_{TM}$ (it doesn't exist).
+- We want to use $R$ to design a Turing machine $S$ that decides $A_{TM}$. Design:
+	- Use $R$ to reject if the input runs forever
+	- Otherwise, simply simulate the input (it is now guaranteed to be decidable)
+- So we can, and we do, and we arrive at a contradiction: as we know there is no such decider for $A_{TM}$.
 
-We want to use $R$ to design a Turing machine $S$ that decides $A_{TM}$. So we can, and we do, and we arrive at a contradiction: there is no such decider for $A_{TM}$. By using $R$ to check if an input runs forever and rejecting in that case
+Then as $A_{TM}$ reduces to $HALT_{TM}$: $HALT_{TM}$ is at least as hard as $A_{TM}$, which is undecidable. So $HALT_{TM}$ is undecidable.
 
-probably? can't relate any two problems with reduction
-
-reduction can? go both ways: A_TM reduces to HALT_TM and vice versa
-
-Another example: showing that $E_{TM}$ is undecidable.
-We will show by reduction: by reducing $A_{TM}$ to $E_{TM}$, i.e. show a Turing machine for deciding E_TM that uses A_TM as a subroutine.
-
-- $A_{TM} = \\{\<M,w\> : M \text{ accepts w}\\}$
-- $E_{TM} = \\{\<M\> : M \text{ is a Turing machine and } L(M) \text{ is empty}$ (i.e. M accepts nothing)
-
-Proof: Assume we have a decider $R$ that decides $E_{TM}$. Idea: create a new Turing machine N with M,w hardcoded inside.
-- if y neq w: reject
-- if y == w: then run M on input w
-- so the language is either w or empty
-
-Simulating a Turing machine S on input x:
-- if x not of form $\<M,w\>$ then reject
-- construct the turing machine N above
-- Run R on input N
-- If R accepts, then we know M does not accept w
-- If R accepts, S rejects, and if R rejects, S accepts.
-
----
-
-Last time: talked about reductions
-- A technique for showing that other problems are undecidable
-- HALT_TM is undecidable
-- A_TM is undecidable
-
-Learning goals
-- What is complexity theory?
-- Mindset of runtime analysis
-- Extended Church Turing thesis
-- Definition of TIME(f(n)) and P
-- Complexity of 2COLORMAP
-- 3COLORMAP in Time(4^n)
+Aside: reduction can go both ways! $A_{TM}$ reduces to $HALT_{TM}$, and vice versa. There are (probably) problems that cannot be related, however.
 
 ## Computability vs Complexity
 
-What is the difference between this theory of Turing machines and computation, vs. complexity?
+What is the difference between this theory of computation and Turing machines, vs. complexity?
 
-Computability theory studies whether problems have **any** algorithmic solution whatsoever
+Computability theory studies whether problems have **any** algorithmic solution whatsoever. 
 
-Complexity theory studies whether problems have **efficient** algorithmic solutions
+Complexity theory studies whether problems have **efficient** algorithmic solutions.
 - How much time is required?
 - How much space is required?
 - Does randomness help?
 
 ### Worst case analysis
 
-Usually theorists do "worst case analysis"
-- As a function of $n$, the input length, what is the maximum amount of resources used over all inputs of length $n$. (note: $n$ is a commonly used variable!)
-- The idea here is that we want to analyze the worst case, as every input will then result in equal or better time
+Usually theorists do "worst case analysis", i.e. as a function of the input length $n$, what is the maximum amount of resources used over all inputs of length $n$? (note: $n$ is a commonly used variable!)
 
-Definition: The **runtime** of a Turing machine $M$ is $f : \mathbb{N} \to \mathbb{N}$
-- $f(n) = max(x\in \Sigma\*, |x|=n$
-- (the number of steps of $M$ on input $x$ until it halts)
-- Assume $M$ is a decider for simplicity.
+The idea here is that it's helpful to analyze the worst case, as every input will then result in equal or better time.
 
-- Definition: a **class** is a set of languages (or computational problems)
-- Definition: a **complexity class** is a class defined by Turing machine resource constraints.
-- Definition: **TIME(t(n))** is the class of all languages $L$ such that there exists a Turing machine with runtime O(t(n)) that decides $L$.
+Definition: The **runtime** of a Turing machine $M$ is $f : \mathbb{N} \to \mathbb{N}$: $f(n) = max(x \in \Sigma\*, |x|=n)$. (the number of steps of $M$ on input $x$ until it halts) (assume $M$ is a decider for simplicity)
 
-Recall: different machine models have different efficiencies: our multi-tape Turing machines were broadly more efficient than our single-tape Turing machines
-- PAL = $\\{ww^R : w \in \Sigma\*\\}$
-- Single-tape Turing machine: $O(n^2)$
-- Multi-tape Turing machine: $O(n)$
+Definition: a **class** is a set of languages (or computational problems)
+
+Definition: a **complexity class** is a class defined by Turing machine resource constraints.
+
+Definition: **TIME(t(n))** is the class of all languages $L$ such that there exists a Turing machine with runtime $O(t(n))$ that decides $L$.
+
+Recall: different machine models have different efficiencies: our multi-tape Turing machines were broadly more efficient than our single-tape Turing machines. For example: 
+- $PAL = \\{ww^R : w \in \Sigma\*\\}$
+- Decided by a single-tape Turing machine in $O(n^2)$ time
+- Decided by a multi-tape Turing machine in $O(n)$ time
 
 ## Revisiting the Church-Turing thesis
 
 The **Extended Church-Turing thesis** is the belief that Turing machines capture our intuitive notation of what is **efficiently computable**.
 - Everything we can compute in time $t(n)$ on any physical computer can be computed on a Turing machine in time $O(t(n)^c)$, for some constant $c$.
 
-Is this true, does it hold? Maybe not, with quantum computers.
+Is this true, does it hold? Maybe not, with new forms of computation like quantum computers.
+
+## P and EXP
 
 Definition: $P = \large \cup_{c>0} TIME(n^c)$
 
 Why is P a good definition for efficient computation?
-- Insensitive to model of computation: by the extended Church-Turing thesis, switching computational models only involves a polynomial slowdown
+- Insensitive to model of computation: by the extended Church-Turing thesis, switching computational models "only" involves a polynomial slowdown
 - Closed under composition: can use polynomial time algorithm as a subroutine
 - In practice: **algorithms usually can be improved**. If we find an $O(n^{30})$ time algorithm, it typically can be improved to, say, $O(n^5)$ time.
 
-## Example: Two color map
-Let $G$ be a "map" of countries in the plane
-- A coloring is valid if neighboring countries have different colors.
+### Example: Two color map
 
-The two color map _does not_ work.
-- $2COLORMAP = \\{\<G\>: G \text{ has valid red/blue coloring}\\}$
-- Is $2COLORMAP \in P$?
-- Sure: start with an arbitrary country, set it to red, set their neighbors to blue, and continue. If there is a conflict, reject, if there is no conflict, accept.
+Let $G$ be a "map" of countries in the plane, where a coloring is valid if neighboring countries have different colors.
 
-It's unknown if the three color map is in P. It's known to be in EXP.
-- For each coloring of G with 3 colors: check if all neighboring countries have different colors. O(3^n n^2) \in O(4^n)
+The two color map _does not_ work for every map. So consider it as a problem: $2COLORMAP = \\{\<G\>: G \text{ has valid red/blue coloring}\\}$. Is $2COLORMAP \in P$?
 
-Definition: $EXP = \large \cup_{k>0} TIME(2^{n^k}})$
+Sure: start with an arbitrary country, set it to red, set their neighbors to blue, and continue. If there is a conflict, reject, if there is no conflict, accept.
 
-The four color map works.
+It's unknown if the three color map is in P. It's known to be in EXP: $O(3^n n^2) \in O(4^n)$
+
+Definition: $EXP = \large \cup_{k>0} TIME(2^{n^k})$
+
+The four color map works for all maps, so $4COLORMAP = \\{\<G\> : G \text{ is a valid map}\\}$.
 
 ## Time Hierarchy Theorem
 
-Question: is EXP = P? Answer: No!
+Question: is $EXP = P$? Answer: No!
 
-Language that is in EXP and not in P: ???
-
-Definition: the **time hierarchy theorem** tells us that 
-
-Let $f:\mathbb{N} \to \mathbb{N}$ that is "reasonable" and $f(n) = \Omega(n \log n)$. Then the $TIME(f(n)) \subset TIME(f(n)^4)$. Notably: $TIME(f(n)) \neq TIME(f(n)^4)$!
-Corollary: $TIME(n^c) \neq TIME(n^{4c})$ for any $c \geq 1$.
-Corollary: $TIME(n^c) \neq TIME(2^n)$ for any c \geq 1.
-$TIME(2^{n^k}) \neq TIME$
+Definition: the **time hierarchy theorem** tells us that given an $f : \mathbb{N} \to \mathbb{N}$ that is "reasonable" where $f(n) = \Omega(n \log n)$, then the $TIME(f(n)) \subset TIME(f(n)^4)$.
+- Notably: $TIME(f(n)) \neq TIME(f(n)^4)$!
+- Corollary: $TIME(n^c) \neq TIME(n^{4c})$ for any $c \geq 1$.
+- Corollary: $TIME(n^c) \neq TIME(2^n)$ for any $c \geq 1$.
+- $TIME(2^{n^k}) \neq TIME$
 
 How do you prove the time hierarchy theorem?
 - By diagonalization: look at Turing machines that are "fast" and that are "slow"
 - Idea: look at all Turing machines that run in "fast" time: and come up with a language that they cannot possibly decide
 - But we want that language to be decidable by a "slow" Turing machine.
 
----
+Language that is in EXP and not in P: ???
+
+todo: rework this entire section, it doesn't make sense
 
 ## Time Complexity
 
-Where is 3COLORMAP? In EXP, and either in NP or in NP and P.
+Where is 3COLORMAP? We know it is in EXP, and either in NP or in both NP and P.
 
-The Time Hierarchy theorem tells us that something is in EXP\P. [why? still not clear]
+The Time Hierarchy theorem tells us that there is something in $EXP \setminus P$. [why? still not clear]
 
-... convenient picture ...
+![Complexity Hierarchy](../assets/complexity-hierarchy.png)
 
-## NP
+## NP and Time Complexity
 
 NP is very important! Contains a large amount of natural problems
 - Ex. Hamilton path, 3 color graph, graph isomorphism, satisfiable boolean formulas
-- Many problems in NP have "identical complexity", i.e. **NP completeness** (we'll talk about this later)
+- Many problems in NP have "identical complexity", i.e. are complete (we'll talk about this later)
 
-Definition: the **runtime** of NTM on input X is the max-length of any root-leaf path (for deciders - no infinite paths!)
+Definition: the **runtime** of NTM on input X is the max-length of any root-leaf path 
+- For deciders - no infinite paths!
 
-Recall: $TIME(t(n)) = \\{\text{language L} : \exists \text{TM M that decides L in time O(t(n))}\\}$
+Recall: $TIME(t(n)) = \\{\text{language L} : \exists \text{ TM M that decides L in time O(t(n))}\\}$
 - $P = \cup_{c>0} TIME(n^c)$
 
-Definition: $NTIME(t(n)) = \\{\text{language L} : \exists \text{NTM M that decides L in time O(t(n))}\\}$
+Definition: $NTIME(t(n)) = \\{\text{language L} : \exists \text{ NTM M that decides L in time O(t(n))}\\}$
 - $NP = \cup_{c>0} NTIME(n^c)$
 
 Obvious: $P \sube NP$.
 
-aside: "P is a 'larger class' than NP": but not strictly larger? god, i love unintuitive definitions
+<!-- aside: "P is a 'larger class' than NP": but not strictly larger? god, i love unintuitive definitions -->
 
-Claim: $3COLORMAP \in NP$
+### Example: 3COLORMAP
+
+Let's prove that $3COLORMAP \in NP$.
+
 Proof: Design a nondeterministic Turing machine to decide 3COLORMAP in polynomial time.
 - Iterate through vertices
-- Nondetermistically pick a color for each vertex
+- Nondetermistically pick a color for each vertex (a "lucky guess")
 - Check all pairs of neighbors to see if they are the same color
 - If so reject, else accept
+
+### NP and EXP
 
 Claim: $NP \sube EXP$.
 Idea: For any $L \in NP$, there is an NTM deciding $L$ in polynomial time. We can simulate it with a DTM that does the breadth-first search on the configuration tree. The tree has a number of nodes _exponential_ in runtime of the NTM.
 
-Open question 1: Is $P \neq NP$? 
-Open question 2. Is $NP \neq EXP$?
-Theorem: The answer to either Q1 or Q2 is yes.
-Proof: $P \sube NP \sube EXP$, yet by the time hierarchy theorem $P \neq EXP$. So either $P \neq NP$ or $NP \neq EXP$ (or both).
+There are several open questions surrounding P, NP, and EXP:
+1. Is $P \neq NP$, i.e. $P \subset NP$? 
+2. Is $NP \neq EXP$, i.e. $NP \subset EXP$?
+
+The answer to **either Q1 or Q2** is yes. Proof: $P \sube NP \sube EXP$, yet by the time hierarchy theorem $P \neq EXP$. So either $P \neq NP$ or $NP \neq EXP$ (or both).
 
 Theorem: The following are equivalent:
-- There exists a nondeterminstic, polytime TM M that decides L.
+- There exists a nondeterministic, polytime TM M that decides L.
 - There exists a deterministic, polytime TM V and a constant c s.t.
-	- $L = \\{x \in \Sigma\* : \exists y \in \Sigma\* s.t. |y| \leq |x|^c \land V \text{ accepts } (x,y)\\}$
+	- $L = \\{x \in \Sigma\* : \exists y \in \Sigma\* \text{ s.t. } \|y\| \leq \|x\|^c \land V \text{ accepts } (x,y)\\}$
 - x: "input", y: "certificate", V: "verifier"
 - i.e. for the three color graph, give us a colored graph and we can verify it
 
 Claim: $3COLOR \in NP$.
 - $\\{\<G\> : \text{ G is 3-colorable}\\}$
-- Must find a deterministic polytime TM V s.t. $3COLOR = \\{x: \exists y, |y| \leq |x|^c, V \text{ accepts } (x,y)\\}$
+- Must find a deterministic polytime TM V s.t. $3COLOR = \\{x: \exists y, \|y\| \leq \|x\|^c, V \text{ accepts } (x,y)\\}$
 - Code for $V$: on input (x,y)
 - If $x$ not of form $\<G\>$, where $G=(V,E)$ is a graph, reject
-- From $y$, extract values color[v] \in \\{1,2,3\\} for each v \in V
-- For every edge $\\{u,v\\} \in E$: If color[u] = color[v], Reject
-- accept
+- From $y$, extract values $color[v] \in \\{1,2,3\\}$ for each $v \in V$
+- For every edge $\\{u,v\\} \in E$: If $color[u] = color[v]$, reject
+- Otherwise accept
 - $y$ does exist, it's simply a valid coloring of the graph
 
 To show correctness of V, we need three things:
 
-1: If x = <G> and G is 3-colorable: need \exists y s.t. |y| \leq |x|^c and V accepts (x,y). It does exists, y can be a valid 3 coloring of G. Note: |y| = O(n) and |x| = \Omega(n)
+1: If $x = \<G\>$ and G is 3-colorable: need $\exists y \text{ s.t. } \|y\| \leq \|x\|^c$ and $\text{V accepts (x,y)}$. It does exist, y can be a valid 3 coloring of G. Note: $\|y\| = O(n)$ and $\|x\| = \Omega(n)$
 
-2: If x \neq <G> where G is 3-colorable: then no certificate y should make V erroreously accpet.
-If x not of form <G>: v definitely rejects.
-If of form <G> by not 3-colorable, then V must reject becasuse it always checks that y is a valid coloring.
+2: If $x \neq \<G\>$ where G is 3-colorable: then no certificate y should make V erroreously accept.
+- If x not of form $\<G\>$: v definitely rejects.
+- If x of form $\<G\>$ by not 3-colorable, then V must reject becasuse it always checks that y is a valid coloring.
 
 3: Must check that V runs in time polynomial in |xy|.
-Decoding takes polytime, checking neighbors takes polytime.
+- Decoding takes polytime, checking neighbors takes polytime.
+
+
